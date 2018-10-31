@@ -38,6 +38,33 @@ class TextArea extends Component {
     this.setState({ content: value });
   };
 
+  copy = () => {
+    const input = this.ref.current;
+    const isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
+
+    if (isiOSDevice) {
+      const editable = input.contentEditable;
+      const { readOnly } = input;
+
+      input.contentEditable = true;
+      input.readOnly = false;
+
+      const range = document.createRange();
+      range.selectNodeContents(input);
+
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+
+      input.setSelectionRange(0, 999999);
+      input.contentEditable = editable;
+      input.readOnly = readOnly;
+    } else {
+      input.select();
+    }
+    document.execCommand('copy');
+  };
+
   handleKeyDown = e => {
     const { key, ctrlKey } = e;
     if (key === SPACEBAR_KEY) {
@@ -56,6 +83,12 @@ class TextArea extends Component {
 
         switch (command) {
           // text shortcuts
+          case 'copy':
+            e.preventDefault();
+            this.replaceTextInNotes(lastWordTyped, '', () => {
+              this.copy();
+            });
+            break;
           case 'c':
           case 'clear':
             e.preventDefault();
@@ -81,7 +114,9 @@ class TextArea extends Component {
             const date = arg;
             fetchDailyText(date).then(data => {
               if (data.success) {
-                this.replaceTextInNotes(lastWordTyped, data.dailyText);
+                this.replaceTextInNotes(lastWordTyped, data.dailyText, () => {
+                  this.copy();
+                });
               }
             });
             break;
@@ -228,7 +263,7 @@ class TextArea extends Component {
     return lastWord;
   };
 
-  replaceTextInNotes = (lastWordTyped, textReplacement) => {
+  replaceTextInNotes = (lastWordTyped, textReplacement, callback) => {
     const { content } = this.state;
     const { selectionStart } = this.ref.current;
     const newContent = content.replace(lastWordTyped, textReplacement);
@@ -241,6 +276,7 @@ class TextArea extends Component {
         const newSelectionStart = selectionStart + (textReplacement.length - lastWordTyped.length);
         this.ref.current.selectionStart = newSelectionStart;
         this.ref.current.selectionEnd = newSelectionStart;
+        if (callback) callback();
       }
     );
   };
