@@ -25,6 +25,7 @@ class TextArea extends Component {
     const content = localStorage.getItem('notesContent') || '';
     const theme = localStorage.getItem('theme') || '';
     this.setState({ content, theme });
+    this.ref.current.focus();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -286,7 +287,6 @@ class TextArea extends Component {
     return (
       <textarea
         ref={this.ref}
-        autoFocus
         value={content}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
