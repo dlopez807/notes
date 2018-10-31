@@ -11,8 +11,9 @@
   },
   "scripts": {
     "start": "parcel index.html --no-cache",
+    "start-bs": "npm start & npm run bs",
     "build": "parcel build index.html -d build --public-url ./",
-    "predeploy": "yarn build",
+    "predeploy": "npm run build",
     "deploy": "cd build && surge --domain niello-notes.surge.sh",
     "bs": "browser-sync start --proxy \"localhost:1234\""
   },
