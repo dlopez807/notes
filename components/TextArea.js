@@ -43,6 +43,7 @@ class TextArea extends Component {
     const input = this.ref.current;
     const isiOSDevice = navigator.userAgent.match(/ipad|iphone/i);
 
+    console.log({ isiOSDevice });
     if (isiOSDevice) {
       const editable = input.contentEditable;
       const { readOnly } = input;
@@ -63,7 +64,8 @@ class TextArea extends Component {
     } else {
       input.select();
     }
-    document.execCommand('copy');
+    document.execCommand('cut');
+    console.log('copied');
   };
 
   handleKeyDown = e => {
@@ -85,6 +87,7 @@ class TextArea extends Component {
         switch (command) {
           // text shortcuts
           case 'copy':
+          case 'cp':
             e.preventDefault();
             this.replaceTextInNotes(lastWordTyped, '', () => {
               this.copy();
@@ -116,7 +119,10 @@ class TextArea extends Component {
             fetchDailyText(date).then(data => {
               if (data.success) {
                 this.replaceTextInNotes(lastWordTyped, data.dailyText, () => {
-                  this.copy();
+                  console.log(this.ref.current);
+                  // this.copy();
+                  this.ref.current.select();
+                  document.execCommand('cut');
                 });
               }
             });

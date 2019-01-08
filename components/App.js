@@ -3,7 +3,7 @@ import 'babel-core/register';
 import 'babel-polyfill';
 
 import TextArea from './TextArea';
-import { fetchBacon, fetchNotes } from '../lib/fetchUtils';
+import { fetchNotes } from '../lib/fetchUtils';
 
 export default class App extends Component {
   state = {
@@ -11,9 +11,6 @@ export default class App extends Component {
   };
 
   componentDidMount() {
-    fetchBacon()
-      .then(data => console.log(data))
-      .catch(error => console.log(error));
     this.updateNotes();
   }
 
