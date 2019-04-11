@@ -226,6 +226,22 @@ class TextArea extends Component {
             this.setState({ mode: '' });
             break;
           }
+          case 'q': {
+            this.replaceTextInNotes(
+              lastWordTyped,
+              `Scramble:
+// inspection
+// cross
+// F2L1
+// F2L2
+// F2L3
+// F2L4
+// OLL
+// PLL
+// AUF`
+            );
+            break;
+          }
           default:
             break;
         }
