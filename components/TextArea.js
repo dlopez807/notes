@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { array, func } from 'prop-types';
 import moment from 'moment';
+import * as clipboard from 'clipboard-polyfill';
 import { fetchDailyText, fetchText, updateNote, fetchNotes, saveNote, deleteNote } from '../lib/fetchUtils';
 
 const SPACEBAR_KEY = ' ';
@@ -118,12 +119,8 @@ class TextArea extends Component {
             const date = arg;
             fetchDailyText(date).then(data => {
               if (data.success) {
-                this.replaceTextInNotes(lastWordTyped, data.dailyText, () => {
-                  console.log(this.ref.current);
-                  // this.copy();
-                  this.ref.current.select();
-                  document.execCommand('cut');
-                });
+                this.replaceTextInNotes(lastWordTyped, data.dailyText);
+                clipboard.writeText(data.dailyText);
               }
             });
             break;
