@@ -85,6 +85,17 @@ class TextArea extends Component {
           if (arg.includes('_')) arg = arg.replace(/_/g, ' ');
         } else command = lastWordTyped.replace('!', '');
 
+        const loadNote = title => {
+          const { notes } = this.props;
+          const selectedNote = notes.find(note => note.title === title);
+
+          if (selectedNote)
+            fetchNotes(selectedNote._id).then(note => {
+              const content = `${note.title}\n${note.body}`;
+              this.replaceTextInNotes(lastWordTyped, content);
+            });
+        };
+
         switch (command) {
           // text shortcuts
           case 'copy':
@@ -161,12 +172,7 @@ class TextArea extends Component {
             const { notes } = this.props;
             const title = arg;
             if (title !== '') {
-              const selectedNote = notes.find(note => note.title === title);
-
-              fetchNotes(selectedNote._id).then(note => {
-                const content = `${note.title}\n${note.body}`;
-                this.replaceTextInNotes(lastWordTyped, content);
-              });
+              loadNote(title);
             } else {
               let loadedNotes = '';
               notes.forEach(note => {
@@ -240,6 +246,7 @@ class TextArea extends Component {
             break;
           }
           default:
+            loadNote(command);
             break;
         }
       } else if (lastWordTyped.includes(':')) {
