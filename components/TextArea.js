@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { array, func } from 'prop-types';
 import moment from 'moment';
 import * as clipboard from 'clipboard-polyfill';
-import { fetchDailyText, fetchText, updateNote, fetchNotes, saveNote, deleteNote } from '../lib/fetchUtils';
+
+import TextAreaStyles from './styles/TextArea';
+import { fetchDailyText, fetchText, updateNote, fetchNotes, saveNote, deleteNote } from '../lib/api';
 
 const SPACEBAR_KEY = ' ';
 const ARROW_UP_KEY = 'ArrowUp';
@@ -18,6 +20,7 @@ class TextArea extends Component {
     content: '',
     theme: '',
     mode: '',
+    loading: true,
   };
 
   ref = React.createRef();
@@ -25,8 +28,8 @@ class TextArea extends Component {
   componentDidMount = () => {
     const content = localStorage.getItem('notesContent') || '';
     const theme = localStorage.getItem('theme') || '';
-    this.setState({ content, theme });
-    this.ref.current.focus();
+    this.setState({ content, theme, loading: false });
+    // this.ref.current.focus();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -308,16 +311,25 @@ class TextArea extends Component {
     );
   };
 
+  moveCaretAtEnd = e => {
+    const temp = e.target.value;
+    e.target.value = '';
+    e.target.value = temp;
+  };
+
   render() {
-    const { content, theme } = this.state;
+    const { content, theme, loading } = this.state;
+    if (loading) return null;
     return (
-      <textarea
+      <TextAreaStyles
         ref={this.ref}
         value={content}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
         className={theme}
-        placeholder="welcome to niello notes"
+        placeholder="niello"
+        autoFocus
+        onFocus={this.moveCaretAtEnd}
       />
     );
   }
