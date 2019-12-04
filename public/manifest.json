@@ -1,6 +1,10 @@
 {
   "short_name": "notes",
   "name": "niello notes",
+  "lang": "en-US",
+  "display": "standalone",
+  "theme_color": "#3B5998",
+  "background_color": "#000000",
   "icons": [
     {
       "src": "logo-192x192.png",
@@ -32,9 +36,5 @@
       "sizes": "57x57",
       "type": "image/png"
     }
-  ],
-  "start_url": "./index.html",
-  "display": "standalone",
-  "theme_color": "#3B5998",
-  "background_color": "#000000"
+  ]
 }

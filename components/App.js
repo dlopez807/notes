@@ -3,7 +3,7 @@ import 'babel-core/register';
 import 'babel-polyfill';
 
 import TextArea from './TextArea';
-import { fetchNotes } from '../lib/fetchUtils';
+import { fetchNotes } from '../lib/api';
 
 export default class App extends Component {
   state = {
