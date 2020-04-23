@@ -1,0 +1,118 @@
+import { useRef } from 'react';
+import Router from 'next/router';
+
+// STRINGS
+const nba = `PG:
+SG:
+SF:
+PF:
+C: `;
+
+const q = `Scramble:
+// inspection
+// cross
+// F2L1
+// F2L2
+// F2L3
+// F2L4
+// OLL
+// PLL
+// AUF`;
+
+export default ({ content, setContent, commandKey, setCommandKey }) => {
+  const textarea = useRef(null);
+  const replace = async (string, newString) => {
+    const { selectionStart } = textarea.current;
+    const newContent = content.replace(string, newString);
+    await setContent(newContent);
+    const newSelectionStart = selectionStart + (newString.length - string.length);
+    textarea.current.selectionStart = newSelectionStart;
+    textarea.current.selectionEnd = newSelectionStart;
+  };
+
+  // COMMANDS
+  const clear = () => setContent('');
+  const setcmd = newCommandKey => setCommandKey(newCommandKey);
+  // const go = path => Router.push(`/${path || ''}`);
+
+  const executeCommand = lastWord => {
+    const [command, ...args] = lastWord.replace(commandKey, '').split('-');
+    console.log({ command, args });
+
+    // COMMAND TEMPLATES
+    const createCommand = ({ cmd, replaceStr = '', go, replaceSpace }) => () => {
+      replace(`${replaceSpace ? ' ' : ''}${lastWord}`, replaceStr);
+      if (cmd) cmd();
+      if (go || go === '') Router.push(`/${go}`);
+    };
+
+    const commands = {
+      // string replacement
+      nba: createCommand({ replaceStr: nba }),
+      q: createCommand({ replaceStr: q }),
+      t: createCommand({ replaceStr: '\t', replaceSpace: true }),
+      // date
+      // time
+      // dailytext
+      // dt
+
+      // go commands
+      go: createCommand({ go: args[0] }),
+      a: createCommand({ go: 'admin' }),
+      n: createCommand({ go: 'notepad' }),
+
+      // notes
+      // load
+      // save
+      // del
+      // delete
+
+      // misc
+      setcmd: createCommand({ cmd: () => setcmd(args[0]) }),
+      c: createCommand({ cmd: clear }),
+      clear: createCommand({ cmd: clear }),
+      // dark
+      // cobalt
+      // light
+      // list
+      // endlist
+    };
+
+    const foo = commands[command];
+    if (foo) foo();
+
+    //     if (command) {
+    //       switch (command) {
+    //         case 'c': {
+    //           setContent('');
+    //           break;
+    //         }
+    //         case 'nba': {
+    //           replace(
+    //             lastWord,
+    //             `PG:
+    // SG:
+    // SF:
+    // PF:
+    // C: `
+    //           );
+    //           break;
+    //         }
+    //         case 'setcmd': {
+    //           replace(lastWord, '');
+    //           setCommandKey(args[0]);
+    //           break;
+    //         }
+    //         case 'go': {
+    //           replace(lastWord, '');
+    //           Router.push(`/${args[0] || ''}`);
+    //           break;
+    //         }
+    //         default:
+    //           // loadNote(command)
+    //           break;
+    //       }
+    //     }
+  };
+  return { textarea, executeCommand };
+};
