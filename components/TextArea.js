@@ -2,9 +2,13 @@ import React, { Component } from 'react';
 import { array, func } from 'prop-types';
 import moment from 'moment';
 import * as clipboard from 'clipboard-polyfill';
+import Router from 'next/router';
 
+import App from './styles/App';
+import Footer from './Footer';
 import TextAreaStyles from './styles/TextArea';
 import { fetchDailyText, fetchText, updateNote, fetchNotes, saveNote, deleteNote } from '../lib/api';
+import copyToClipboard from '../lib/copyToClipboard';
 
 const SPACEBAR_KEY = ' ';
 const ARROW_UP_KEY = 'ArrowUp';
@@ -20,7 +24,10 @@ class TextArea extends Component {
     content: '',
     theme: '',
     mode: '',
+    list: '-',
+    command: '!',
     loading: true,
+    open: false,
   };
 
   ref = React.createRef();
@@ -28,19 +35,28 @@ class TextArea extends Component {
   componentDidMount = () => {
     const content = localStorage.getItem('notesContent') || '';
     const theme = localStorage.getItem('theme') || '';
-    this.setState({ content, theme, loading: false });
+    const command = localStorage.getItem('command') || '!';
+    this.setState({ content, theme, command, loading: false });
     // this.ref.current.focus();
   };
 
   componentDidUpdate = (prevProps, prevState) => {
-    const { content, theme } = this.state;
+    const { content, theme, command } = this.state;
     if (prevState.content !== content) localStorage.setItem('notesContent', content);
     if (prevState.theme !== theme) localStorage.setItem('theme', theme);
+    if (prevState.command !== command) localStorage.setItem('command', command);
   };
 
   handleChange = e => {
     const { value } = e.target;
     this.setState({ content: value });
+  };
+
+  cp = () => {
+    const input = this.ref.current;
+    console.log({ input });
+    input.select();
+    document.execCommand('copy');
   };
 
   copy = () => {
@@ -77,26 +93,27 @@ class TextArea extends Component {
     if (key === SPACEBAR_KEY) {
       const lastWordTyped = this.getLastWordTyped();
 
-      if (lastWordTyped.includes('!')) {
+      if (lastWordTyped.includes(this.state.command)) {
         let command = '';
         let arg = '';
 
         if (lastWordTyped.includes('-')) {
           const lastWordTypedSplit = lastWordTyped.split('-');
           [command, arg] = lastWordTypedSplit;
-          command = command.replace('!', '');
+          command = command.replace(this.state.command, '');
           if (arg.includes('_')) arg = arg.replace(/_/g, ' ');
-        } else command = lastWordTyped.replace('!', '');
+        } else command = lastWordTyped.replace(this.state.command, '');
 
-        const loadNote = title => {
+        const loadNote = async title => {
           const { notes } = this.props;
           const selectedNote = notes.find(note => note.title === title);
 
-          if (selectedNote)
-            fetchNotes(selectedNote._id).then(note => {
-              const content = `${note.title}\n${note.body}`;
-              this.replaceTextInNotes(lastWordTyped, content);
-            });
+          if (selectedNote) {
+            const { note } = await fetchNotes(selectedNote._id);
+
+            const content = `${note.title}\n${note.body}`;
+            this.replaceTextInNotes(lastWordTyped, content);
+          }
         };
 
         switch (command) {
@@ -222,14 +239,16 @@ class TextArea extends Component {
           }
           case 'list': {
             e.preventDefault();
-            this.replaceTextInNotes(lastWordTyped, '- ');
-            this.setState({ mode: 'list' });
+            const list = arg === 'ol' ? 1 : '-';
+            console.log({ list });
+            this.replaceTextInNotes(lastWordTyped, `${list} `);
+            this.setState({ mode: `list${arg === 'ol' ? '-ol' : ''}`, list });
             break;
           }
           case 'endlist': {
             e.preventDefault();
             this.replaceTextInNotes(lastWordTyped, '');
-            this.setState({ mode: '' });
+            this.setState({ mode: '', list: '-' });
             break;
           }
           case 'q': {
@@ -246,6 +265,34 @@ class TextArea extends Component {
 // PLL
 // AUF`
             );
+            break;
+          }
+          case 'setcmd': {
+            this.replaceTextInNotes(lastWordTyped, '');
+            this.setState({ command: arg });
+            break;
+          }
+          case 'go': {
+            e.preventDefault();
+            this.replaceTextInNotes(lastWordTyped, '');
+            Router.push(`/${arg}`);
+            break;
+          }
+          case 'a': {
+            e.preventDefault();
+            this.replaceTextInNotes(lastWordTyped, '');
+            Router.push('/admin');
+            break;
+          }
+          case 'n': {
+            e.preventDefault();
+            this.replaceTextInNotes(lastWordTyped, '');
+            Router.push('/notepad');
+            break;
+          }
+          case 't': {
+            e.preventDefault();
+            this.replaceTextInNotes(` ${lastWordTyped}`, '\t');
             break;
           }
           default:
@@ -265,15 +312,43 @@ class TextArea extends Component {
     } else if (key === ARROW_DOWN_KEY && ctrlKey) {
       console.log('down');
     } else if (key === 'Enter') {
-      const { mode } = this.state;
-      if (mode === 'list') {
+      const { mode, list } = this.state;
+      if (mode.includes('list')) {
         console.log('list mode');
         e.preventDefault();
+        const newList = mode === 'list-ol' ? list + 1 : '-';
         this.setState(prevState => ({
-          content: `${prevState.content}\n- `,
+          content: `${prevState.content}\n${newList} `,
+          list: newList,
         }));
       }
+    } else if (key === 'Tab') {
+      e.preventDefault();
+      this.insertTab();
     }
+  };
+
+  insertTab = () => {
+    const { selectionStart, selectionEnd } = this.ref.current;
+
+    // set textarea value to: text before caret + tab + text after caret
+    // $(this).val($(this).val().substring(0, start)
+    //   + "\t"
+    //   + $(this).val().substring(end));
+    const { content } = this.state;
+    const newContent = `${content.substring(0, selectionStart)}\t${content.substring(selectionEnd)}`;
+    this.setState(
+      {
+        content: newContent,
+      },
+      () => {
+        // put caret at right position again
+        // this.selectionStart =
+        //   this.selectionEnd = start + 1;
+        this.ref.current.selectionStart = selectionStart + 1;
+        this.ref.current.selectionEnd = selectionStart + 1;
+      }
+    );
   };
 
   getLastWordTyped = () => {
@@ -317,21 +392,46 @@ class TextArea extends Component {
     e.target.value = temp;
   };
 
+  toggleOpen = () => this.setState(state => ({ open: !state.open }));
+
   render() {
-    const { content, theme, loading } = this.state;
+    const { content, theme, loading, open } = this.state;
     if (loading) return null;
     return (
-      <TextAreaStyles
-        ref={this.ref}
-        value={content}
-        onChange={this.handleChange}
-        onKeyDown={this.handleKeyDown}
-        className={theme}
-        placeholder="niello"
-        autoFocus
-        onFocus={this.moveCaretAtEnd}
-      />
+      <App open={open}>
+        <textarea
+          ref={this.ref}
+          value={content}
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+          className={theme}
+          placeholder="notes"
+          autoFocus
+          onFocus={this.moveCaretAtEnd}
+        />
+        <Footer
+          open={open}
+          toggleOpen={this.toggleOpen}
+          copy={() => copyToClipboard(content)}
+          cut={() => {
+            copyToClipboard(content);
+            this.setState({ content: '' });
+          }}
+        />
+      </App>
     );
+    // return (
+    //   <TextAreaStyles
+    //     ref={this.ref}
+    //     value={content}
+    //     onChange={this.handleChange}
+    //     onKeyDown={this.handleKeyDown}
+    //     className={theme}
+    //     placeholder="notes"
+    //     autoFocus
+    //     onFocus={this.moveCaretAtEnd}
+    //   />
+    // );
   }
 }
 

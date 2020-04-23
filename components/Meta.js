@@ -14,7 +14,7 @@ const Meta = () => (
     <link rel="apple-touch-icon" sizes="114x114" href="/logo-114x114.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="/logo-144x144.png" />
     <link rel="manifest" href="/manifest.json" />
-    <title>niello</title>
+    <title>notes</title>
   </Head>
 );
 
