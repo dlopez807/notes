@@ -10,12 +10,13 @@
     "url": "https://github.com/dlopez807/notes.git"
   },
   "scripts": {
-    "dev": "next -p 5678",
+    "dev": "next -p 1234",
     "build": "next build",
     "start": "next start"
   },
   "dependencies": {
     "@babel/core": "^7.7.4",
+    "@baconjuice/notes": "^1.0.5",
     "axios": "^0.18.1",
     "cheerio": "^1.0.0-rc.3",
     "clipboard-polyfill": "^2.8.1",

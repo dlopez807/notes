@@ -1,0 +1,10 @@
+{
+  "env": {
+    "MLAB_URI": "@mlab-uri"
+  },
+  "build": {
+    "env": {
+      "MLAB_URI": "@mlab-uri"
+    }
+  }
+}
