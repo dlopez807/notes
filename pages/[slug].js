@@ -13,7 +13,7 @@ export default () => {
   const slug = typeof window !== 'undefined' ? window.location.pathname.slice(1) : '';
   const [editOrder, setEditOrder] = useState(false);
   const { data } = searchNotes({ slug });
-  const { notes } = data || {};
+  const notes = data || {};
   if (!data) return <div>loading</div>;
   const [note] = notes;
   const { markdown, list, table } = note;

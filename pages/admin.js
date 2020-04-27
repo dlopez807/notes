@@ -143,9 +143,8 @@ const Note = ({ note: initialNote, theme, revalidate, isNew }) => {
 
 export default () => {
   const [theme] = useLocalStorage('theme', '');
-  const { data, revalidate } = getNotes();
-  if (!data) return <div>loading</div>;
-  const { notes } = data;
+  const { data: notes, revalidate } = getNotes();
+  if (!notes) return <div>loading</div>;
   // const sortedNotes = notes.sort((a, b) => moment(b.updatedAt) - moment(a.updatedAt));
   return (
     <>

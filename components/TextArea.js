@@ -109,7 +109,7 @@ class TextArea extends Component {
           const selectedNote = notes.find(note => note.title === title);
 
           if (selectedNote) {
-            const { note } = await fetchNotes(selectedNote._id);
+            const note = await fetchNotes(selectedNote._id);
 
             const content = `${note.title}\n${note.body}`;
             this.replaceTextInNotes(lastWordTyped, content);

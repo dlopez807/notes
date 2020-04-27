@@ -1,13 +1,8 @@
-import { Note } from '../../../lib/models';
+const { connect, searchNotes } = require('@baconjuice/notes');
 
 export default async (req, res) => {
   const { query } = req;
-
-  const notes = await Note.find(query).exec();
-
-  res.json({
-    path: '/api/notes/search',
-    query,
-    notes,
-  });
+  connect(process.env.MLAB_URI);
+  const notes = await searchNotes(query);
+  res.json(notes);
 };

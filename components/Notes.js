@@ -8,7 +8,7 @@ const Notes = ({ notes: initialNotes }) => {
   // console.log({ initialNotes });
   const [notes, setNotes] = useState(initialNotes);
   const updateNotes = async () => {
-    const { notes: newNotes } = await fetchNotes();
+    const newNotes = await fetchNotes();
     setNotes(newNotes);
     console.log('notes updated');
   };
