@@ -88,7 +88,7 @@ class TextArea extends Component {
     console.log('copied');
   };
 
-  handleKeyDown = e => {
+  handleKeyDown = async e => {
     const { key, ctrlKey } = e;
     if (key === SPACEBAR_KEY) {
       const lastWordTyped = this.getLastWordTyped();
@@ -217,10 +217,11 @@ class TextArea extends Component {
               const selectedNote = notes.find(note => note.title === title);
               if (selectedNote) {
                 const { _id } = selectedNote;
-                updateNote({ _id, title, body });
+                await updateNote({ _id, title, body });
               } else {
                 const { updateNotes } = this.props;
-                saveNote({ title, body }, () => updateNotes());
+                await saveNote({ title, body });
+                updateNotes();
               }
             }
             break;
@@ -233,7 +234,8 @@ class TextArea extends Component {
             const { notes, updateNotes } = this.props;
             if (title !== '') {
               const selectedNote = notes.find(note => note.title === title);
-              deleteNote(selectedNote._id, () => updateNotes());
+              await deleteNote(selectedNote._id);
+              updateNotes();
             }
             break;
           }
