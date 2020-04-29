@@ -25,10 +25,8 @@ const NoteStyles = styled.li`
     height: 25vh;
   }
   input {
-    &.cobalt {
-      background: ${props => props.theme.cobalt.background};
-      color: ${props => props.theme.cobalt.color};
-    }
+    background: ${props => props.theme.background};
+    color: ${props => props.theme.color};
   }
   button {
     background: none;

@@ -1,53 +1,45 @@
 import styled from 'styled-components';
 
-import device from '../../config/device';
-
 export default styled.footer`
-  display: none;
-  @media ${device.mobileM} {
-    z-index: 1000;
-    display: block;
-    color: ${props => props.theme.footer.color};
-    position: sticky;
-    bottom: 1rem;
-    margin-top: 1rem;
-    button {
-      background: none;
-      border: none;
-      color: ${props => props.theme.footer.color};
-    }
-    ul {
-      margin: 0 6rem;
-      border-radius: 25px;
-      background: ${props => props.theme.footer.background};
-      display: flex;
-      list-style: none;
-      align-items: center;
-      li {
-        flex-grow: 1;
-        text-align: center;
-        border-right: 1px solid ${props => props.theme.footer.color};
-        /* padding-bottom: 1rem; */
-        a,
-        button {
+  display: block;
+  color: ${props => props.theme.footer.color};
+  bottom: 1rem;
+  position: fixed;
+  width: 100%;
+  ul {
+    margin: 0 6rem;
+    border-radius: 25px;
+    background: ${props => props.theme.footer.background};
+    display: flex;
+    list-style: none;
+    align-items: center;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+    li {
+      flex-grow: 1;
+      text-align: center;
+      border-right: 1px solid ${props => props.theme.footer.color};
+      a,
+      button {
+        display: block;
+        padding: 1rem 0;
+        width: 100%;
+        background: none;
+        border: none;
+        color: ${props => props.theme.footer.color};
+        svg {
           display: block;
-          padding: 1rem 0;
-          width: 100%;
-          svg {
-            display: block;
-            margin: 0 auto;
-            color: ${props => props.theme.footer.link.color};
-          }
-        }
-        &:last-child {
-          border-right: none;
-        }
-        &.active {
-          a svg {
-            color: ${props => props.theme.footerLinkActive};
-          }
+          margin: 0 auto;
+          color: ${props => props.theme.footer.link.color};
         }
       }
+      &:last-child {
+        border-right: none;
+      }
+      /* &.active {
+        a svg {
+          color: ${props => props.theme.footerLinkActive};
+        }
+      } */
     }
   }
 `;

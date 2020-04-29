@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import { node } from 'prop-types';
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
 import { Normalize } from 'styled-normalize';
 
 import Meta from './Meta';
 // import device from '../config/device';
+import useLocalStorage from '../lib/useLocalStorage';
 
 const colors = {
   black: '#000',
@@ -11,9 +13,18 @@ const colors = {
   cobalt: '#193549',
 };
 
-const theme = {
-  background: colors.white,
-  color: colors.black,
+const themes = {
+  default: {
+    background: colors.white,
+    color: colors.black,
+    footer: {
+      color: colors.white,
+      background: colors.cobalt,
+      link: {
+        color: colors.white,
+      },
+    },
+  },
   dark: {
     background: colors.black,
     color: colors.white,
@@ -21,13 +32,6 @@ const theme = {
   cobalt: {
     background: colors.cobalt,
     color: colors.white,
-  },
-  footer: {
-    color: colors.white,
-    background: colors.cobalt,
-    link: {
-      color: colors.white,
-    },
   },
 };
 
@@ -61,6 +65,8 @@ const GlobalStyles = createGlobalStyle`
   html {
     box-sizing: border-box;
     font-size: 10px;
+    background: ${props => props.theme.background};
+    color: ${props => props.theme.color};
   }
   *, *:before, *:after {
     box-sizing: inherit;
@@ -96,16 +102,36 @@ const GlobalStyles = createGlobalStyle`
 }
 `;
 
-const Page = ({ children }) => (
-  <ThemeProvider theme={theme}>
-    <StyledPage>
-      <Normalize />
-      <GlobalStyles />
-      <Meta />
-      <Main>{children}</Main>
-    </StyledPage>
-  </ThemeProvider>
-);
+const Page = ({ children }) => {
+  const [customTheme, setCustomTheme] = useLocalStorage('theme', 'cobalt');
+  const custom = customTheme || 'default';
+  const [theme, setTheme] = useState({
+    ...themes.default,
+    ...themes[custom],
+  });
+  const updateTheme = newTheme => {
+    setCustomTheme(newTheme || 'default');
+    setTheme({
+      ...themes.default,
+      ...themes[newTheme],
+    });
+  };
+  return (
+    <ThemeProvider
+      theme={{
+        ...theme,
+        updateTheme,
+      }}
+    >
+      <StyledPage>
+        <Normalize />
+        <GlobalStyles />
+        <Meta />
+        <Main>{children}</Main>
+      </StyledPage>
+    </ThemeProvider>
+  );
+};
 
 Page.propTypes = {
   children: node.isRequired,
