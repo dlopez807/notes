@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useContext } from 'react';
 import Router from 'next/router';
+import { ThemeContext } from 'styled-components';
 
 import { fetchDailyText, fetchText, getNotes, saveNote, updateNote, deleteNote } from './api';
 import useLocalStorage from './useLocalStorage';
+import copyToClipboard from './copyToClipboard';
 
 const SPACEBAR_KEY = ' ';
 
@@ -44,7 +46,7 @@ const q = `Scramble:
 export default () => {
   const [content, setContent] = useLocalStorage('content', '');
   const [commandKey, setCommandKey] = useLocalStorage('command', '!');
-  const [theme, setTheme] = useLocalStorage('theme', 'cobalt');
+  const { updateTheme } = useContext(ThemeContext);
   const textarea = useRef(null);
   const [mode, setMode] = useState('');
   const [list, setList] = useState('-');
@@ -146,9 +148,9 @@ export default () => {
       setcmd: createCommand({ fn: () => setcmd(args[0]) }),
       c: createCommand({ fn: clear }),
       clear: createCommand({ fn: clear }),
-      dark: createCommand({ fn: () => setTheme('dark') }),
-      cobalt: createCommand({ fn: () => setTheme('cobalt') }),
-      light: createCommand({ fn: () => setTheme('light') }),
+      dark: createCommand({ fn: () => updateTheme('dark') }),
+      cobalt: createCommand({ fn: () => updateTheme('cobalt') }),
+      light: createCommand({ fn: () => updateTheme('light') }),
       list: createCommand({
         fn: () => {
           const ol = args[0] === 'ol';
@@ -185,7 +187,6 @@ export default () => {
       if (lastWord === '?') {
         replace(lastWord, `cmd = ${commandKey}[command]`);
       } else if (lastWord.includes(':')) {
-        e.preventDefault();
         fetchText(lastWord).then(res => {
           if (res.success) {
             const scripture = `${res.text} (${res.reference})`;
@@ -219,5 +220,15 @@ export default () => {
       console.log('down');
     }
   };
-  return { textarea, content, handleChange, handleKeyDown, theme };
+  return {
+    textarea,
+    content,
+    handleChange,
+    handleKeyDown,
+    copy: () => copyToClipboard(content),
+    cut: () => {
+      copyToClipboard(content);
+      setContent('');
+    },
+  };
 };
