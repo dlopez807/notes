@@ -5,6 +5,7 @@ export default styled.textarea`
   color: ${props => props.theme.color};
   width: 100%;
   height: 100%;
+  resize: none;
   font-size: 3vh;
   font-family: Arial, Helvetica;
   padding: 5px;
