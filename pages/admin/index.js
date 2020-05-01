@@ -1,15 +1,19 @@
-import { useState } from 'react';
-import styled from 'styled-components';
+import { useState, useContext } from 'react';
+import styled, { ThemeContext } from 'styled-components';
 import Link from 'next/link';
-import Router from 'next/router';
-import { Home, Edit, FilePlus, ArrowRightCircle } from 'react-feather';
+import Router, { useRouter } from 'next/router';
+import Modal from 'react-modal';
+import { Home, Edit, FilePlus, ArrowRightCircle, X } from 'react-feather';
 
-import Delete from '../components/Delete';
-import Footer from '../components/styles/Footer';
-import TextArea from '../components/styles/TextArea';
-import { getNotes, saveNote, updateNote, deployNote, deleteNote } from '../lib/api';
-import useLocalStorage from '../lib/useLocalStorage';
-import useForm from '../lib/useForm';
+import Delete from '../../components/Delete';
+import Note from '../../components/Note';
+import Footer from '../../components/styles/Footer';
+import TextArea from '../../components/styles/TextArea';
+import { getNotes, saveNote, updateNote, deployNote, deleteNote } from '../../lib/api';
+import useLocalStorage from '../../lib/useLocalStorage';
+import useForm from '../../lib/useForm';
+
+Modal.setAppElement('#__next');
 
 const NoteStyles = styled.li`
   margin-bottom: 1rem;
@@ -31,10 +35,14 @@ const NoteStyles = styled.li`
   button {
     background: none;
     border: none;
+    color: ${props => props.theme.color};
+  }
+  a {
+    color: ${props => props.theme.color};
   }
 `;
 
-const Note = ({ note: initialNote, theme, revalidate, isNew }) => {
+const Note2 = ({ note: initialNote, theme, revalidate, isNew }) => {
   const [edit, setEdit] = useState(false);
   const initialValues = {
     title: initialNote?.title ?? '',
@@ -139,19 +147,92 @@ const Note = ({ note: initialNote, theme, revalidate, isNew }) => {
   );
 };
 
+const Note1 = ({ note: { _id, title, slug } }) => (
+  <NoteStyles>
+    <h2 data-id={_id}>{title}</h2>
+    <Link href={`/admin/${_id}`}>
+      <a>
+        <Edit />
+      </a>
+    </Link>
+    {slug && (
+      <Link href={`/${slug}`}>
+        <a>
+          <ArrowRightCircle />
+        </a>
+      </Link>
+    )}
+  </NoteStyles>
+);
+
 export default () => {
-  const [theme] = useLocalStorage('theme', '');
+  const router = useRouter();
+  // const [theme] = useLocalStorage('theme', '');
   const { data: notes, revalidate } = getNotes();
+  const { background } = useContext(ThemeContext);
   if (!notes) return <div>loading</div>;
   // const sortedNotes = notes.sort((a, b) => moment(b.updatedAt) - moment(a.updatedAt));
+  const note = notes.find(n => n._id === router.query.id);
+  const isNew = router.query.id === 'new';
+  const modalStyles = {
+    // content: {
+    //   top: '50%',
+    //   left: '50%',
+    //   right: 'auto',
+    //   bottom: 'auto',
+    //   marginRight: '-50%',
+    //   transform: 'translate(-50%, -50%)'
+    // }
+    overlay: {
+      // inset: '5vh',
+    },
+    content: {
+      padding: 0,
+      inset: '1vh',
+      top: '1vh',
+      left: '1vh',
+      right: '1vh',
+      bottom: '1vh',
+      border: 'none',
+      background,
+      display: 'flex',
+      flexDirection: 'column',
+    },
+  };
   return (
     <>
       <ul>
+        {/* <NoteStyles>
+          <Link href="/admin?id=new" as="/admin/new">
+            <a>
+              <FilePlus />
+            </a>
+          </Link>
+        </NoteStyles> */}
+        {notes.map(({ _id, title, slug }) => (
+          <NoteStyles key={_id}>
+            <h2 data-id={_id}>{title}</h2>
+            <Link href={`/admin?id=${_id}`} as={`/admin/${_id}`}>
+              <a>
+                <Edit />
+              </a>
+            </Link>
+            {slug && (
+              <Link href={`/${slug}`}>
+                <a>
+                  <ArrowRightCircle />
+                </a>
+              </Link>
+            )}
+          </NoteStyles>
+        ))}
+      </ul>
+      {/* <ul>
         <Note key="new" isNew theme={theme} revalidate={revalidate} />
         {notes.map(note => (
           <Note key={note._id} note={note} theme={theme} revalidate={revalidate} />
         ))}
-      </ul>
+      </ul> */}
       <Footer>
         <ul>
           <li>
@@ -161,8 +242,36 @@ export default () => {
               </a>
             </Link>
           </li>
+          <li>
+            <Link href="/admin?id=new" as="/admin/new">
+              <a>
+                <FilePlus />
+              </a>
+            </Link>
+          </li>
         </ul>
       </Footer>
+      <Modal style={modalStyles} isOpen={!!router.query.id} onRequestClose={() => router.push('/admin')}>
+        {isNew ? <Note isModal /> : <Note note={note} revalidate={revalidate} isNew={isNew} isModal />}
+        <Footer>
+          <ul>
+            <li>
+              <Link href={`/admin/${router.query.id}`}>
+                <a>
+                  <ArrowRightCircle />
+                </a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/admin">
+                <a>
+                  <X />
+                </a>
+              </Link>
+            </li>
+          </ul>
+        </Footer>
+      </Modal>
     </>
   );
 };

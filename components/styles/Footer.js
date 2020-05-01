@@ -4,10 +4,11 @@ export default styled.footer`
   display: block;
   color: ${props => props.theme.footer.color};
   bottom: 1rem;
-  position: fixed;
-  width: 100%;
+  position: ${props => (props.absolute ? 'absolute' : 'fixed')};
+  /* width: 100%; */
+  align-self: ${props => (props.right ? 'flex-end' : 'center')};
   ul {
-    margin: 0 6rem;
+    /* margin: 0 6rem; */
     border-radius: 25px;
     background: ${props => props.theme.footer.background};
     display: flex;
@@ -18,6 +19,7 @@ export default styled.footer`
       flex-grow: 1;
       text-align: center;
       border-right: 1px solid ${props => props.theme.footer.color};
+      padding: 0 2rem;
       a,
       button {
         display: block;
@@ -41,5 +43,14 @@ export default styled.footer`
         }
       } */
     }
+  }
+  .open {
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+    border-radius: 25px;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
   }
 `;

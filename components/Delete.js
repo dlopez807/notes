@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { func } from 'prop-types';
+import { Trash2, CheckCircle, XCircle } from 'react-feather';
 
 const Delete = ({ handleDelete }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -8,15 +9,15 @@ const Delete = ({ handleDelete }) => {
       {confirmDelete ? (
         <>
           <button type="button" onClick={handleDelete}>
-            confirm delete
+            <CheckCircle />
           </button>
           <button type="button" onClick={() => setConfirmDelete(false)}>
-            cancel delete
+            <XCircle />
           </button>
         </>
       ) : (
           <button type="button" onClick={() => setConfirmDelete(true)}>
-            delete
+            <Trash2 />
           </button>
         )}
     </>
