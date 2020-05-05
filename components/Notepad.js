@@ -17,11 +17,6 @@ export default () => {
         onChange={handleChange}
         onKeyDown={handleKeyDown}
         autoFocus
-        onFocus={e => {
-          const temp = e.target.value;
-          e.target.value = '';
-          e.target.value = temp;
-        }}
       />
       <Footer>
         <ul>
