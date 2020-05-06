@@ -89,13 +89,13 @@ export default styled.div`
 
   h1 {
     font-size: 28px;
-    color: black;
+    color: ${props => props.theme.color};
   }
 
   h2 {
     font-size: 24px;
     border-bottom: 1px solid #cccccc;
-    color: black;
+    color: ${props => props.theme.color};
   }
 
   h3 {
@@ -406,6 +406,7 @@ export default styled.div`
 
   pre {
     background-color: #f8f8f8;
+    background-color: ${props => props.theme.background};
     border: 1px solid #cccccc;
     font-size: 13px;
     line-height: 19px;
