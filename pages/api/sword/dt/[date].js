@@ -1,12 +1,12 @@
-import request from '../../../../lib/requestDailyText';
+import request from '../../../../lib/requestDailyText'
 
 export default (req, res) => {
   const {
     query: { date },
-  } = req;
-  const dt = date.replace(/-/g, '/');
-  request(dt, res);
-};
+  } = req
+  const dt = date.replace(/-/g, '/')
+  request(dt, res)
+}
 
 /*
 const year = req.params.year || moment().format('YYYY');

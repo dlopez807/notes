@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { Copy, Scissors, Save, Download, Command, X } from 'react-feather';
+import { useState } from 'react'
+import { Copy, Scissors, Save, Download, Command, X } from 'react-feather'
 
-import Footer from './styles/Footer';
+import Footer from './styles/Footer'
 
 export default ({ open, toggleOpen, copy, cut }) => (
   <footer>
@@ -26,4 +26,4 @@ export default ({ open, toggleOpen, copy, cut }) => (
       {open ? <X /> : <Command />}
     </button>
   </footer>
-);
+)

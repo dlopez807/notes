@@ -1,45 +1,59 @@
-import { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useState } from 'react'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import List from './styles/List';
+import List from './styles/List'
 
-const regex = /\d+\s/;
-const removeNumbers = item => item.replace(regex, '');
+const regex = /\d+\s/
+const removeNumbers = item => item.replace(regex, '')
 
 const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
+  const result = Array.from(list)
+  const [removed] = result.splice(startIndex, 1)
+  result.splice(endIndex, 0, removed)
 
-  return result;
-};
+  return result
+}
 
 const DND = ({ items, setItems, isOrderedList }) => (
   <DragDropContext
     onDragEnd={result => {
       // dropped outside the list
       if (!result.destination) {
-        return;
+        return
       }
 
-      const newItems = reorder(items, result.source.index, result.destination.index);
+      const newItems = reorder(
+        items,
+        result.source.index,
+        result.destination.index
+      )
 
-      setItems(newItems);
+      setItems(newItems)
     }}
   >
     <Droppable droppableId="droppable">
       {(provided, snapshot) => (
         <div {...provided.droppableProps} ref={provided.innerRef}>
           {items.map((item, index) => (
-            <Draggable key={index} draggableId={`draggable-${index}`} index={index}>
+            <Draggable
+              key={index}
+              draggableId={`draggable-${index}`}
+              index={index}
+            >
               {(provided, snapshot) => {
-                const { dragHandleProps } = provided;
-                delete dragHandleProps.tabIndex;
+                const { dragHandleProps } = provided
+                delete dragHandleProps.tabIndex
                 return (
-                  <div ref={provided.innerRef} {...provided.draggableProps} {...dragHandleProps}>
-                    {isOrderedList ? `${index + 1}. ${removeNumbers(item)}` : item}
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...dragHandleProps}
+                  >
+                    {isOrderedList
+                      ? `${index + 1}. ${removeNumbers(item)}`
+                      : item}
                   </div>
-                );
+                )
               }}
             </Draggable>
           ))}
@@ -48,12 +62,12 @@ const DND = ({ items, setItems, isOrderedList }) => (
       )}
     </Droppable>
   </DragDropContext>
-);
+)
 
 export default ({ list, editOrder }) => {
-  const [items, setItems] = useState(list);
-  const isOrderedList = items.every(item => regex.test(item));
-  console.log({ items, isOrderedList });
+  const [items, setItems] = useState(list)
+  const isOrderedList = items.every(item => regex.test(item))
+  console.log({ items, isOrderedList })
   return (
     <List>
       {editOrder ? (
@@ -65,12 +79,12 @@ export default ({ list, editOrder }) => {
           ))}
         </ol>
       ) : (
-            <ul>
-              {items.map((item, index) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          )}
+        <ul>
+          {items.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
+      )}
     </List>
-  );
-};
+  )
+}

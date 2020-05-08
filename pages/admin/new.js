@@ -1,3 +1,3 @@
-import Note from '../../components/Note';
+import Note from '../../components/Note'
 
-export default () => <Note />;
+export default () => <Note />

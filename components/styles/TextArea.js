@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export default styled.textarea`
   background: ${props => props.theme.background};
@@ -17,4 +17,4 @@ export default styled.textarea`
   box-shadow: none;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-`;
+`

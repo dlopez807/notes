@@ -1,11 +1,18 @@
-import { Copy, Scissors, Download } from 'react-feather';
+import { Copy, Scissors, Download } from 'react-feather'
 
-import TextArea from './styles/TextArea';
-import Footer from './styles/Footer';
-import useTextArea from '../lib/useTextArea';
+import TextArea from './styles/TextArea'
+import Footer from './styles/Footer'
+import useTextArea from '../lib/useTextArea'
 
 export default () => {
-  const { textarea, content, handleChange, handleKeyDown, copy, cut } = useTextArea();
+  const {
+    textarea,
+    content,
+    handleChange,
+    handleKeyDown,
+    copy,
+    cut,
+  } = useTextArea()
   return (
     <>
       <TextArea
@@ -38,5 +45,5 @@ export default () => {
         </ul>
       </Footer>
     </>
-  );
-};
+  )
+}

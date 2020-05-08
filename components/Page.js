@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { node } from 'prop-types';
-import styled, { ThemeProvider, createGlobalStyle } from 'styled-components';
-import { Normalize } from 'styled-normalize';
+import { useState } from 'react'
+import { node } from 'prop-types'
+import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
+import { Normalize } from 'styled-normalize'
 
-import Meta from './Meta';
+import Meta from './Meta'
 // import device from '../config/device';
-import useLocalStorage from '../lib/useLocalStorage';
+import useLocalStorage from '../lib/useLocalStorage'
 
 const colors = {
   black: '#000',
   white: '#cccccc',
   cobalt: '#193549',
-};
+}
 
 const themes = {
   default: {
@@ -33,7 +33,7 @@ const themes = {
     background: colors.cobalt,
     color: colors.white,
   },
-};
+}
 
 const StyledPage = styled.div`
   background: ${props => props.theme.background};
@@ -42,7 +42,7 @@ const StyledPage = styled.div`
     color: ${props => props.theme.linkColor};
     text-decoration: none;
   }
-`;
+`
 
 const Main = styled.main`
   min-height: 100vh;
@@ -55,7 +55,7 @@ const Main = styled.main`
   > .content {
     flex: 1 0 auto;
   }
-`;
+`
 
 const GlobalStyles = createGlobalStyle`
   /* html, body {
@@ -99,23 +99,22 @@ const GlobalStyles = createGlobalStyle`
   }
   /* height: 100%;
   width: 100%; */
-}
-`;
+`
 
 const Page = ({ children }) => {
-  const [customTheme, setCustomTheme] = useLocalStorage('theme', 'cobalt');
-  const custom = customTheme || 'default';
+  const [customTheme, setCustomTheme] = useLocalStorage('theme', 'cobalt')
+  const custom = customTheme || 'default'
   const [theme, setTheme] = useState({
     ...themes.default,
     ...themes[custom],
-  });
+  })
   const updateTheme = newTheme => {
-    setCustomTheme(newTheme || 'default');
+    setCustomTheme(newTheme || 'default')
     setTheme({
       ...themes.default,
       ...themes[newTheme],
-    });
-  };
+    })
+  }
   return (
     <ThemeProvider
       theme={{
@@ -130,11 +129,11 @@ const Page = ({ children }) => {
         <Main>{children}</Main>
       </StyledPage>
     </ThemeProvider>
-  );
-};
+  )
+}
 
 Page.propTypes = {
   children: node.isRequired,
-};
+}
 
-export default Page;
+export default Page

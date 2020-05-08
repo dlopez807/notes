@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import Router from 'next/router';
-import styled from 'styled-components';
-import { Save, ArrowRightCircle, ArrowUpCircle, Settings } from 'react-feather';
+import { useState } from 'react'
+import Router from 'next/router'
+import styled from 'styled-components'
+import { Save, ArrowRightCircle, ArrowUpCircle, Settings } from 'react-feather'
 
-import Delete from './Delete';
-import TextArea from './styles/TextArea';
-import FooterStyles from './styles/Footer';
-import { saveNote, updateNote, deployNote, deleteNote } from '../lib/api';
-import useForm from '../lib/useForm';
+import Delete from './Delete'
+import TextArea from './styles/TextArea'
+import FooterStyles from './styles/Footer'
+import { saveNote, updateNote, deployNote, deleteNote } from '../lib/api'
+import useForm from '../lib/useForm'
 
 const Note = styled.div`
   display: flex;
@@ -22,7 +22,6 @@ const Note = styled.div`
     border: none;
   }
   textarea {
-    /* height: 25vh; */
     flex: 1 0 auto;
     height: auto;
   }
@@ -36,10 +35,10 @@ const Note = styled.div`
     border: none;
     color: ${props => props.theme.color};
   }
-`;
+`
 
 const Footer = ({ isModal, children }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   return (
     <FooterStyles absolute={isModal} right>
       {open ? (
@@ -49,7 +48,7 @@ const Footer = ({ isModal, children }) => {
             <button
               type="button"
               onClick={() => {
-                setOpen(false);
+                setOpen(false)
               }}
             >
               <Settings />
@@ -57,29 +56,35 @@ const Footer = ({ isModal, children }) => {
           </li>
         </ul>
       ) : (
-          <button
-            type="button"
-            onClick={() => {
-              setOpen(true);
-            }}
-            className="open"
-          >
-            <Settings />
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={() => {
+            setOpen(true)
+          }}
+          className="open"
+        >
+          <Settings />
+        </button>
+      )}
     </FooterStyles>
-  );
-};
+  )
+}
 
-export default ({ note: initialNote, theme, revalidate, isModal }) => {
+export default ({ note: initialNote, revalidate, isModal }) => {
   const initialValues = {
     title: initialNote?.title ?? '',
     body: initialNote?.body ?? '',
     slug: initialNote?.slug ?? '',
     tags: initialNote?.tags.join(' ') ?? '',
     hook: initialNote?.hook ?? '',
-  };
-  const { values: note, handleChange, handleSubmit, isSubmitting, dirty } = useForm({
+  }
+  const {
+    values: note,
+    handleChange,
+    handleSubmit,
+    isSubmitting,
+    dirty,
+  } = useForm({
     initialValues,
     onSubmit: async (values, { setSubmitting }) => {
       if (!initialNote?._id) {
@@ -88,9 +93,10 @@ export default ({ note: initialNote, theme, revalidate, isModal }) => {
           body: values.body,
           slug: values.slug,
           tags: values.tags,
-        });
-        if (isModal) Router.push(`/admin?id=${savedNote._id}`, `/admin/${savedNote._id}`);
-        else Router.push(`/admin/${savedNote._id}`);
+        })
+        if (isModal)
+          Router.push(`/admin?id=${savedNote._id}`, `/admin/${savedNote._id}`)
+        else Router.push(`/admin/${savedNote._id}`)
       } else {
         await updateNote({
           _id: initialNote._id,
@@ -99,27 +105,56 @@ export default ({ note: initialNote, theme, revalidate, isModal }) => {
           slug: values.slug,
           tags: values.tags,
           hook: values.hook,
-        });
-        await revalidate();
+        })
+        await revalidate()
       }
-      setSubmitting(false);
+      setSubmitting(false)
     },
-  });
+  })
 
-  const { title, body, slug, tags, hook } = note;
+  const { title, body, slug, tags, hook } = note
 
   return (
     <Note isModal={isModal}>
       <h2>
-        <input name="title" value={title} placeholder="title" onChange={handleChange} />
+        <input
+          name="title"
+          value={title}
+          placeholder="title"
+          onChange={handleChange}
+        />
       </h2>
-      <TextArea name="body" value={body} placeholder="body" onChange={handleChange} />
-      <input name="slug" value={slug} placeholder="slug" onChange={handleChange} />
-      <input name="tags" value={tags} placeholder="tags" onChange={handleChange} />
-      <input name="hook" value={hook} placeholder="hook" onChange={handleChange} />
+      <TextArea
+        name="body"
+        value={body}
+        placeholder="body"
+        onChange={handleChange}
+      />
+      <input
+        name="slug"
+        value={slug}
+        placeholder="slug"
+        onChange={handleChange}
+      />
+      <input
+        name="tags"
+        value={tags}
+        placeholder="tags"
+        onChange={handleChange}
+      />
+      <input
+        name="hook"
+        value={hook}
+        placeholder="hook"
+        onChange={handleChange}
+      />
       <Footer isModal={isModal}>
         <li>
-          <button type="button" onClick={handleSubmit} disabled={!dirty || isSubmitting}>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!dirty || isSubmitting}
+          >
             <Save />
           </button>
         </li>
@@ -135,9 +170,9 @@ export default ({ note: initialNote, theme, revalidate, isModal }) => {
             <button
               type="button"
               onClick={async () => {
-                console.log({ deployId: initialNote._id });
-                const res = await deployNote(initialNote._id);
-                console.log({ res });
+                console.log({ deployId: initialNote._id })
+                const res = await deployNote(initialNote._id)
+                console.log({ res })
               }}
               disabled={dirty}
             >
@@ -149,14 +184,14 @@ export default ({ note: initialNote, theme, revalidate, isModal }) => {
           <li>
             <Delete
               handleDelete={async () => {
-                await deleteNote(initialNote._id);
-                await revalidate();
-                Router.push('/admin');
+                await deleteNote(initialNote._id)
+                await revalidate()
+                Router.push('/admin')
               }}
             />
           </li>
         )}
       </Footer>
     </Note>
-  );
-};
+  )
+}

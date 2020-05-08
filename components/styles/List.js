@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export default styled.div`
   ol,
@@ -11,4 +11,4 @@ export default styled.div`
   div[data-rbd-droppable-id='droppable'] {
     padding-left: 4rem;
   }
-`;
+`

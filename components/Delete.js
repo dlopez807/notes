@@ -1,9 +1,9 @@
-import { useState } from 'react';
-import { func } from 'prop-types';
-import { Trash2, CheckCircle, XCircle } from 'react-feather';
+import { useState } from 'react'
+import { func } from 'prop-types'
+import { Trash2, CheckCircle, XCircle } from 'react-feather'
 
 const Delete = ({ handleDelete }) => {
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false)
   return (
     <>
       {confirmDelete ? (
@@ -16,16 +16,16 @@ const Delete = ({ handleDelete }) => {
           </button>
         </>
       ) : (
-          <button type="button" onClick={() => setConfirmDelete(true)}>
-            <Trash2 />
-          </button>
-        )}
+        <button type="button" onClick={() => setConfirmDelete(true)}>
+          <Trash2 />
+        </button>
+      )}
     </>
-  );
-};
+  )
+}
 
 Delete.propTypes = {
   handleDelete: func.isRequired,
-};
+}
 
-export default Delete;
+export default Delete

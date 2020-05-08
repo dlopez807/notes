@@ -1,4 +1,4 @@
-import Head from 'next/head';
+import Head from 'next/head'
 
 const Meta = () => (
   <Head>
@@ -16,6 +16,6 @@ const Meta = () => (
     <link rel="manifest" href="/manifest.json" />
     <title>notes</title>
   </Head>
-);
+)
 
-export default Meta;
+export default Meta

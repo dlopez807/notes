@@ -1,12 +1,3 @@
-import Notes from '../components/Notes';
-import Notepad from '../components/Notepad';
-import { fetchNotes } from '../lib/api';
+import Notepad from '../components/Notepad'
 
-const NotesPage = () => <Notepad />;
-
-// NotesPage.getInitialProps = async () => {
-//   const notes = await fetchNotes();
-//   return { notes };
-// };
-
-export default NotesPage;
+export default () => <Notepad />

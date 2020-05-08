@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const Search = styled.input`
   width: 100%;
-`;
+`
 
-export { Search };
+export { Search }
 
 export default styled.ul`
   li {
@@ -61,4 +61,4 @@ export default styled.ul`
       }
     }
   }
-`;
+`

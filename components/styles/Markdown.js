@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export default styled.div`
   padding: 0 1rem;
@@ -420,4 +420,4 @@ export default styled.div`
     background-color: transparent;
     border: none;
   }
-`;
+`

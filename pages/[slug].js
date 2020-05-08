@@ -1,29 +1,35 @@
-import { useState } from 'react';
-import Link from 'next/link';
-import Head from 'next/head';
-import { Home, List as ListIcon, Check, ArrowLeftCircle } from 'react-feather';
+import { useState } from 'react'
+import Head from 'next/head'
+// import Link from 'next/link'
+// import { Home, List as ListIcon, Check, ArrowLeftCircle } from 'react-feather'
 
-import List from '../components/List';
-import Todo from '../components/Todo';
-import Markdown from '../components/styles/Markdown';
-import Footer from '../components/styles/Footer';
-import { updateNote, searchNotes } from '../lib/api';
+import List from '../components/List'
+import Todo from '../components/Todo'
+import Markdown from '../components/styles/Markdown'
+// import Footer from '../components/styles/Footer'
+import { updateNote, searchNotes } from '../lib/api'
 
 export default () => {
-  const slug = typeof window !== 'undefined' ? window.location.pathname.slice(1) : '';
-  const [editOrder, setEditOrder] = useState(false);
-  const { data } = searchNotes({ slug });
-  const notes = data || {};
-  if (!data) return <div>loading</div>;
-  const [note] = notes;
-  const { markdown, list, table } = note;
-  console.log({ note });
-  const editNote = async updates => updateNote({ _id: note._id, ...updates });
+  const slug =
+    typeof window !== 'undefined' ? window.location.pathname.slice(1) : ''
+  const [editOrder, setEditOrder] = useState(false)
+  const { data } = searchNotes({ slug })
+  const notes = data || {}
+  if (!data) return <div>loading</div>
+  const [note] = notes
+  const { markdown, list, table } = note
+  console.log({ note })
+  const editNote = async updates => updateNote({ _id: note._id, ...updates })
   return (
     <>
       <Head>
         <title>
-          notes - {markdown ? note.title.replace('# ', '') : list ? note.title.replace('= ', '') : note.title}
+          notes -{' '}
+          {markdown
+            ? note.title.replace('# ', '')
+            : list
+              ? note.title.replace('= ', '')
+              : note.title}
         </title>
       </Head>
       <div className="content">
@@ -40,11 +46,11 @@ export default () => {
             <List list={list} editOrder={editOrder} />
           </>
         ) : (
-                <>
-                  <h1>{note.title}</h1>
-                  <pre>{note.body}</pre>
-                </>
-              )}
+          <>
+            <h1>{note.title}</h1>
+            <pre>{note.body}</pre>
+          </>
+        )}
       </div>
       {/* <Footer>
         <ul>
@@ -84,5 +90,5 @@ export default () => {
       {/* </ul>
       </Footer> */}
     </>
-  );
-};
+  )
+}
