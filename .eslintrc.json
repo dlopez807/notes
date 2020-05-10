@@ -22,6 +22,14 @@
     "import/prefer-default-export": 0,
     "import/no-extraneous-dependencies": 0,
     "no-underscore-dangle": 0,
-    "react/jsx-props-no-spreading": 0
+    "react/jsx-props-no-spreading": 0,
+    "import/named": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "jest": {
+        "jestConfigFile": "./jest.config.js"
+      }
+    }
   }
 }
