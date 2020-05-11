@@ -17,10 +17,10 @@ export default async (req, res) => {
     const note = await saveNote({ id, title, body, slug, tags, hook })
     res.json(note)
   } else if (method === 'DELETE') {
-    const response = deleteNote(id)
+    const response = await deleteNote(id)
     res.json(response)
   } else if (method === 'POST') {
-    const response = deployNote(id)
+    const response = await deployNote(id)
     res.json(response)
   } else {
     const note = await getNotes({ id })
