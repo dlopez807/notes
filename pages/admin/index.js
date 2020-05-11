@@ -1,42 +1,16 @@
 import { useContext } from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import { ThemeContext } from 'styled-components'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import Modal from 'react-modal'
-import { Home, Edit, FilePlus, ArrowRightCircle, X } from 'react-feather'
+import { Home, FilePlus, ArrowRightCircle, X } from 'react-feather'
 
+import Notes from '../../components/Notes'
 import Note from '../../components/Note'
 import Footer from '../../components/styles/Footer'
 import { getNotes } from '../../lib/api'
 
 Modal.setAppElement('#__next')
-
-const NoteStyles = styled.li`
-  margin-bottom: 1rem;
-  &:last-child {
-    margin-bottom: 0;
-  }
-  input,
-  textarea {
-    width: 100%;
-    border: none;
-  }
-  textarea {
-    height: 25vh;
-  }
-  input {
-    background: ${props => props.theme.background};
-    color: ${props => props.theme.color};
-  }
-  button {
-    background: none;
-    border: none;
-    color: ${props => props.theme.color};
-  }
-  a {
-    color: ${props => props.theme.color};
-  }
-`
 
 export default () => {
   const router = useRouter()
@@ -62,25 +36,7 @@ export default () => {
   }
   return (
     <>
-      <ul>
-        {notes.map(({ _id, title, slug }) => (
-          <NoteStyles key={_id}>
-            <h2 data-id={_id}>{title}</h2>
-            <Link href={`/admin?id=${_id}`} as={`/admin/${_id}`}>
-              <a>
-                <Edit />
-              </a>
-            </Link>
-            {slug && (
-              <Link href={`/${slug}`}>
-                <a>
-                  <ArrowRightCircle />
-                </a>
-              </Link>
-            )}
-          </NoteStyles>
-        ))}
-      </ul>
+      <Notes notes={notes} />
       <Footer>
         <ul>
           <li>
