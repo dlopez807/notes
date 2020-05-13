@@ -1,8 +1,8 @@
-import moment from 'moment'
+import format from 'date-fns/format'
 
 import request from '../../../../lib/requestDailyText'
 
 export default (req, res) => {
-  const date = moment().format('YYYY/M/D')
+  const date = format(new Date(), 'yyyy/M/d')
   request(date, res)
 }

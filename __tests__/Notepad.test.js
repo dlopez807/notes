@@ -1,4 +1,6 @@
 import React from 'react'
+import format from 'date-fns/format'
+
 import { render, fireEvent } from 'test-utils'
 import Notepad from '../components/Notepad'
 
@@ -56,6 +58,24 @@ C: `
   fireEvent.change(notepad, { target: { value: text } })
   fireEvent.keyDown(notepad, { key: ' ' })
   expect(notepad.value).toBe(nba)
+})
+
+it('performs date command', () => {
+  const { getByPlaceholderText } = render(<Notepad />)
+  const notepad = getByPlaceholderText('notepad')
+  const text = '!date'
+  fireEvent.change(notepad, { target: { value: text } })
+  fireEvent.keyDown(notepad, { key: ' ' })
+  expect(notepad.value).toBe(format(new Date(), 'M/d/yy'))
+})
+
+it('performs time command', () => {
+  const { getByPlaceholderText } = render(<Notepad />)
+  const notepad = getByPlaceholderText('notepad')
+  const text = '!time'
+  fireEvent.change(notepad, { target: { value: text } })
+  fireEvent.keyDown(notepad, { key: ' ' })
+  expect(notepad.value).toBe(format(new Date(), "h:mmaaaaa'm'"))
 })
 
 // it('gets scripture', () => {
