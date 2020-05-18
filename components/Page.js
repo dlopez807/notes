@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { node } from 'prop-types'
 import styled, { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { Normalize } from 'styled-normalize'
+import { ToastContainer } from 'react-toastify'
 
 import Meta from './Meta'
 // import device from '../config/device';
@@ -11,6 +12,18 @@ const colors = {
   black: '#000',
   white: '#cccccc',
   cobalt: '#193549',
+  giest: {
+    success: {
+      default: '#0070F3',
+      light: '#3291FF',
+      dark: '#0366D6',
+    },
+    error: {
+      default: '#FF0000',
+      light: '#FF3333',
+      dark: '#E60000',
+    },
+  },
 }
 
 const themes = {
@@ -24,6 +37,9 @@ const themes = {
         color: colors.white,
       },
     },
+    notification: {
+      success: colors.giest.success.default,
+    },
   },
   dark: {
     background: colors.black,
@@ -34,6 +50,37 @@ const themes = {
     color: colors.white,
   },
 }
+
+const Notification = styled(ToastContainer).attrs({
+  // custom props
+  // autoClose: false,
+  autoClose: 3000,
+})`
+  .Toastify__toast-container {
+    padding: 1rem;
+    width: auto;
+    border-radius: 25px;
+  }
+  .Toastify__toast {
+    color: ${props => props.theme.color};
+    margin-bottom: 0;
+    min-height: auto;
+    border-radius: 3px;
+  }
+  .Toastify__toast--error {
+  }
+  .Toastify__toast--warning {
+  }
+  .Toastify__toast--success {
+    /* background: ${props => props.theme.notification.success}; */
+    background: ${props => props.theme.notification.success};
+  }
+  .Toastify__toast-body {
+    text-align: center;
+  }
+  .Toastify__progress-bar {
+  }
+`
 
 const StyledPage = styled.div`
   background: ${props => props.theme.background};
@@ -116,16 +163,12 @@ const Page = ({ children }) => {
     })
   }
   return (
-    <ThemeProvider
-      theme={{
-        ...theme,
-        updateTheme,
-      }}
-    >
+    <ThemeProvider theme={{ ...theme, updateTheme }}>
       <StyledPage>
         <Normalize />
         <GlobalStyles />
         <Meta />
+        <Notification />
         <Main>{children}</Main>
       </StyledPage>
     </ThemeProvider>

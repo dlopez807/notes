@@ -1,4 +1,5 @@
 import App from 'next/app'
+import 'react-toastify/dist/ReactToastify.min.css'
 
 import Page from '../components/Page'
 

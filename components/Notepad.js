@@ -1,4 +1,5 @@
 import { Copy, Scissors, Download } from 'react-feather'
+import { toast } from 'react-toastify'
 
 import TextArea from './styles/TextArea'
 import Footer from './styles/Footer'
@@ -28,18 +29,25 @@ export default () => {
       <Footer>
         <ul>
           <li>
-            <button type="button" onClick={copy}>
+            <button
+              type="button"
+              onClick={() => {
+                toast.success('copy')
+                copy()
+              }}
+            >
               <Copy />
             </button>
           </li>
           <li>
-            <button type="button" onClick={cut}>
+            <button
+              type="button"
+              onClick={() => {
+                toast.success('cut')
+                cut()
+              }}
+            >
               <Scissors />
-            </button>
-          </li>
-          <li>
-            <button type="button" onClick={copy}>
-              <Download />
             </button>
           </li>
         </ul>
