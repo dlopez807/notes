@@ -8,6 +8,7 @@ import TextArea from './styles/TextArea'
 import FooterStyles from './styles/Footer'
 import { saveNote, updateNote, deployNote, deleteNote } from '../lib/api'
 import useForm from '../lib/useForm'
+import useTextArea from '../lib/useTextArea'
 
 const Note = styled.div`
   display: flex;
@@ -72,12 +73,23 @@ const Footer = ({ isModal, children }) => {
 
 export default ({ note: initialNote, revalidate, isModal }) => {
   const initialValues = {
-    title: initialNote?.title ?? '',
-    body: initialNote?.body ?? '',
     slug: initialNote?.slug ?? '',
     tags: initialNote?.tags.join(' ') ?? '',
     hook: initialNote?.hook ?? '',
   }
+  const initialContent = `${initialNote ? initialNote.title : ''}${
+    initialNote ? `\n${initialNote.body}` : ''
+  }`
+  const {
+    textarea,
+    content,
+    handleChange: handleTextAreaChange,
+    handleKeyDown,
+    dirty: dirtyTextArea,
+  } = useTextArea({
+    initialContent,
+    noteId: initialNote?._id,
+  })
   const {
     values: note,
     handleChange,
@@ -87,10 +99,12 @@ export default ({ note: initialNote, revalidate, isModal }) => {
   } = useForm({
     initialValues,
     onSubmit: async (values, { setSubmitting }) => {
+      const [title, ...bodyArray] = content.split('\n')
+      const body = bodyArray.join('\n')
       if (!initialNote?._id) {
         const { data: savedNote } = await saveNote({
-          title: values.title,
-          body: values.body,
+          title,
+          body,
           slug: values.slug,
           tags: values.tags,
         })
@@ -100,8 +114,8 @@ export default ({ note: initialNote, revalidate, isModal }) => {
       } else {
         await updateNote({
           _id: initialNote._id,
-          title: values.title,
-          body: values.body,
+          title,
+          body,
           slug: values.slug,
           tags: values.tags,
           hook: values.hook,
@@ -112,23 +126,17 @@ export default ({ note: initialNote, revalidate, isModal }) => {
     },
   })
 
-  const { title, body, slug, tags, hook } = note
+  const { slug, tags, hook } = note
 
   return (
     <Note isModal={isModal}>
-      <h2>
-        <input
-          name="title"
-          value={title}
-          placeholder="title"
-          onChange={handleChange}
-        />
-      </h2>
       <TextArea
+        ref={textarea}
         name="body"
-        value={body}
-        placeholder="body"
-        onChange={handleChange}
+        value={content}
+        placeholder="note"
+        onChange={handleTextAreaChange}
+        onKeyDown={handleKeyDown}
       />
       <input
         name="slug"
@@ -153,7 +161,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
           <button
             type="button"
             onClick={handleSubmit}
-            disabled={!dirty || isSubmitting}
+            disabled={(!dirty && !dirtyTextArea) || isSubmitting}
           >
             <Save />
           </button>
@@ -170,9 +178,8 @@ export default ({ note: initialNote, revalidate, isModal }) => {
             <button
               type="button"
               onClick={async () => {
-                console.log({ deployId: initialNote._id })
                 const res = await deployNote(initialNote._id)
-                console.log({ res })
+                console.log({ deployRes: res })
               }}
               disabled={dirty}
             >
