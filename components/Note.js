@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Router from 'next/router'
 import styled from 'styled-components'
 import { Save, ArrowRightCircle, ArrowUpCircle, Settings } from 'react-feather'
+import { toast } from 'react-toastify'
 
 import Delete from './Delete'
 import TextArea from './styles/TextArea'
@@ -108,6 +109,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
           slug: values.slug,
           tags: values.tags,
         })
+        toast.success('note saved')
         if (isModal)
           Router.push(`/admin?id=${savedNote._id}`, `/admin/${savedNote._id}`)
         else Router.push(`/admin/${savedNote._id}`)
@@ -120,6 +122,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
           tags: values.tags,
           hook: values.hook,
         })
+        toast.success('note updated')
         await revalidate()
       }
       setSubmitting(false)
@@ -180,6 +183,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
               onClick={async () => {
                 const res = await deployNote(initialNote._id)
                 console.log({ deployRes: res })
+                toast.success('note deployed')
               }}
               disabled={dirty}
             >
