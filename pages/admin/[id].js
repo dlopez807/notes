@@ -1,4 +1,5 @@
 import Note from '../../components/Note'
+import Skeleton from '../../components/styles/Skeleton'
 import { getNotes } from '../../lib/api'
 
 export default () => {
@@ -6,7 +7,7 @@ export default () => {
     typeof window !== 'undefined' ? window.location.pathname.slice(1) : ''
   const [, id] = path.split('/')
   const { data, revalidate } = getNotes(id)
-  if (!data) return <div>loading</div>
+  if (!data) return <Skeleton />
   const note = data || {
     title: '',
     body: '',

@@ -7,6 +7,7 @@ import { Home, FilePlus, ArrowRightCircle, X } from 'react-feather'
 
 import Notes from '../../components/Notes'
 import Note from '../../components/Note'
+import Skeleton from '../../components/styles/Skeleton'
 import Footer from '../../components/styles/Footer'
 import { getNotes } from '../../lib/api'
 
@@ -14,10 +15,9 @@ Modal.setAppElement('#__next')
 
 export default () => {
   const router = useRouter()
-  // const [theme] = useLocalStorage('theme', '');
   const { data: notes, revalidate } = getNotes()
   const { background } = useContext(ThemeContext)
-  if (!notes) return <div>loading</div>
+  if (!notes) return <Skeleton />
   const note = notes.find(n => n._id === router.query.id)
   const isNew = router.query.id === 'new'
   const modalStyles = {
