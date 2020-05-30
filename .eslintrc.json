@@ -27,6 +27,9 @@
   },
   "settings": {
     "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      },
       "jest": {
         "jestConfigFile": "./jest.config.js"
       }

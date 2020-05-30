@@ -42,7 +42,7 @@ const Note = styled.div`
 const Footer = ({ isModal, children }) => {
   const [open, setOpen] = useState(false)
   return (
-    <FooterStyles absolute={isModal} right>
+    <FooterStyles absolute={isModal} right column>
       {open ? (
         <ul>
           {children}
