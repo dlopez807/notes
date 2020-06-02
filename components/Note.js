@@ -21,15 +21,19 @@ const Note = styled.div`
   input,
   textarea {
     width: 100%;
-    border: none;
+    border: 1px solid ${props => props.theme.input.background};
+    &:focus {
+      outline: none;
+      border: 1px solid ${props => props.theme.input.color};
+    }
   }
   textarea {
     flex: 1 0 auto;
     height: auto;
   }
   input {
-    background: ${props => props.theme.background};
-    color: ${props => props.theme.color};
+    background: ${props => props.theme.input.background};
+    color: ${props => props.theme.input.color};
     padding: 5px;
   }
   button {
@@ -43,31 +47,19 @@ const Footer = ({ isModal, children }) => {
   const [open, setOpen] = useState(false)
   return (
     <FooterStyles absolute={isModal} right column>
-      {open ? (
-        <ul>
-          {children}
-          <li>
-            <button
-              type="button"
-              onClick={() => {
-                setOpen(false)
-              }}
-            >
-              <Settings />
-            </button>
-          </li>
-        </ul>
-      ) : (
-        <button
-          type="button"
-          onClick={() => {
-            setOpen(true)
-          }}
-          className="open"
-        >
-          <Settings />
-        </button>
-      )}
+      <ul>
+        {open && children}
+        <li>
+          <button
+            type="button"
+            onClick={() => {
+              setOpen(!open)
+            }}
+          >
+            <Settings />
+          </button>
+        </li>
+      </ul>
     </FooterStyles>
   )
 }

@@ -36,6 +36,15 @@ export default styled.footer`
           margin: 0 auto;
           color: ${props => props.theme.footer.link.color};
         }
+        &:focus {
+          outline: none;
+        }
+        &:disabled {
+          color: ${props => props.theme.footer.disabled};
+          svg {
+            color: ${props => props.theme.footer.disabled};
+          }
+        }
       }
       &:last-child {
         border-right: none;
