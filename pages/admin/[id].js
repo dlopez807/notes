@@ -1,3 +1,4 @@
+import Page from '../../components/Page'
 import Note from '../../components/Note'
 import Skeleton from '../../components/styles/Skeleton'
 import { getNotes } from '../../lib/api'
@@ -15,5 +16,11 @@ export default () => {
     tags: [],
     hook: '',
   }
-  return <Note note={note} revalidate={revalidate} />
+  return (
+    <Page>
+      <main>
+        <Note note={note} revalidate={revalidate} />
+      </main>
+    </Page>
+  )
 }

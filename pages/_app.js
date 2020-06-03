@@ -1,16 +1,15 @@
 import App from 'next/app'
 import 'react-toastify/dist/ReactToastify.min.css'
 
-import Page from '../components/Page'
+import Theme from '../components/Theme'
 
 class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
-
     return (
-      <Page>
+      <Theme>
         <Component {...pageProps} />
-      </Page>
+      </Theme>
     )
   }
 }

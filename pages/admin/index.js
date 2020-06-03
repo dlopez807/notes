@@ -5,6 +5,7 @@ import { useRouter } from 'next/router'
 import Modal from 'react-modal'
 import { Home, FilePlus, ArrowRightCircle, X } from 'react-feather'
 
+import Page from '../../components/Page'
 import Notes from '../../components/Notes'
 import Note from '../../components/Note'
 import Skeleton from '../../components/styles/Skeleton'
@@ -35,55 +36,57 @@ export default () => {
     },
   }
   return (
-    <>
-      <Notes notes={notes} />
-      <Footer>
-        <ul>
-          <li>
-            <Link href="/">
-              <a>
-                <Home />
-              </a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/admin?id=new" as="/admin/new">
-              <a>
-                <FilePlus />
-              </a>
-            </Link>
-          </li>
-        </ul>
-      </Footer>
-      <Modal
-        style={modalStyles}
-        isOpen={!!router.query.id}
-        onRequestClose={() => router.push('/admin')}
-      >
-        {isNew ? (
-          <Note isModal />
-        ) : (
-          <Note note={note} revalidate={revalidate} isNew={isNew} isModal />
-        )}
+    <Page>
+      <main>
+        <Notes notes={notes} />
         <Footer>
           <ul>
             <li>
-              <Link href={`/admin/${router.query.id}`}>
+              <Link href="/">
                 <a>
-                  <ArrowRightCircle />
+                  <Home />
                 </a>
               </Link>
             </li>
             <li>
-              <Link href="/admin">
+              <Link href="/admin?id=new" as="/admin/new">
                 <a>
-                  <X />
+                  <FilePlus />
                 </a>
               </Link>
             </li>
           </ul>
         </Footer>
-      </Modal>
-    </>
+        <Modal
+          style={modalStyles}
+          isOpen={!!router.query.id}
+          onRequestClose={() => router.push('/admin')}
+        >
+          {isNew ? (
+            <Note isModal />
+          ) : (
+            <Note note={note} revalidate={revalidate} isNew={isNew} isModal />
+          )}
+          <Footer>
+            <ul>
+              <li>
+                <Link href={`/admin/${router.query.id}`}>
+                  <a>
+                    <ArrowRightCircle />
+                  </a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/admin">
+                  <a>
+                    <X />
+                  </a>
+                </Link>
+              </li>
+            </ul>
+          </Footer>
+        </Modal>
+      </main>
+    </Page>
   )
 }

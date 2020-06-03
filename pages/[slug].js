@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import Head from 'next/head'
 // import Link from 'next/link'
 // import { Home, List as ListIcon, Check, ArrowLeftCircle } from 'react-feather'
 
+import Page from '../components/Page'
 import List from '../components/List'
 import Todo from '../components/Todo'
 import Markdown from '../components/styles/Markdown'
@@ -20,39 +20,37 @@ export default () => {
   const { markdown, list, table } = note
   console.log({ note })
   const editNote = async updates => updateNote({ _id: note._id, ...updates })
+  const title = `notes -${
+    markdown
+      ? note.title.replace('# ', '')
+      : list
+        ? note.title.replace('= ', '')
+        : note.title
+  }`
   return (
-    <>
-      <Head>
-        <title>
-          notes -{' '}
-          {markdown
-            ? note.title.replace('# ', '')
-            : list
-              ? note.title.replace('= ', '')
-              : note.title}
-        </title>
-      </Head>
-      <div className="content">
-        {markdown ? (
-          <Markdown dangerouslySetInnerHTML={{ __html: markdown }} />
-        ) : note.title.includes('[ ') ? (
-          <>
-            <h1>{note.title.replace('[ ', '')}</h1>
-            <Todo list={table} editNote={editNote} />
-          </>
-        ) : list && list.length > 0 ? (
-          <>
-            <h1>{note.title.replace('= ', '')}</h1>
-            <List list={list} editOrder={editOrder} />
-          </>
-        ) : (
-          <>
-            <h1>{note.title}</h1>
-            <pre>{note.body}</pre>
-          </>
-        )}
-      </div>
-      {/* <Footer>
+    <Page title={title}>
+      <main>
+        <div className="content">
+          {markdown ? (
+            <Markdown dangerouslySetInnerHTML={{ __html: markdown }} />
+          ) : note.title.includes('[ ') ? (
+            <>
+              <h1>{note.title.replace('[ ', '')}</h1>
+              <Todo list={table} editNote={editNote} />
+            </>
+          ) : list && list.length > 0 ? (
+            <>
+              <h1>{note.title.replace('= ', '')}</h1>
+              <List list={list} editOrder={editOrder} />
+            </>
+          ) : (
+            <>
+              <h1>{note.title}</h1>
+              <pre>{note.body}</pre>
+            </>
+          )}
+        </div>
+        {/* <Footer>
         <ul>
           {!note.title.includes('[ ') && (
             <>
@@ -80,15 +78,16 @@ export default () => {
                 )}
             </>
           )} */}
-      {/* {note.title.includes('[ ') && (
+        {/* {note.title.includes('[ ') && (
             <li>
               <button type="button" onClick={() => setEditOrder(!editOrder)}>
                 +
               </button>
             </li>
           )} */}
-      {/* </ul>
+        {/* </ul>
       </Footer> */}
-    </>
+      </main>
+    </Page>
   )
 }
