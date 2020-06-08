@@ -6,7 +6,7 @@ import Modal from 'react-modal'
 import { Home, FilePlus, ArrowRightCircle, X } from 'react-feather'
 
 import Page from '../../components/Page'
-import Notes from '../../components/Notes'
+import NoteList from '../../components/NoteList'
 import Note from '../../components/Note'
 import Skeleton from '../../components/styles/Skeleton'
 import Footer from '../../components/styles/Footer'
@@ -16,10 +16,13 @@ Modal.setAppElement('#__next')
 
 export default () => {
   const router = useRouter()
-  const { data: notes, revalidate } = getNotes()
+  const { data: notes, revalidate: rev } = getNotes()
+  const revalidate = () => {
+    rev()
+    console.log('revalidate')
+  }
   const { background } = useContext(ThemeContext)
-  if (!notes) return <Skeleton />
-  const note = notes.find(n => n._id === router.query.id)
+  const note = notes?.find(n => n._id === router.query.id)
   const isNew = router.query.id === 'new'
   const modalStyles = {
     content: {
@@ -38,34 +41,46 @@ export default () => {
   return (
     <Page>
       <main>
-        <Notes notes={notes} />
-        <Footer>
-          <ul>
-            <li>
-              <Link href="/">
-                <a>
-                  <Home />
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/admin?id=new" as="/admin/new">
-                <a>
-                  <FilePlus />
-                </a>
-              </Link>
-            </li>
-          </ul>
-        </Footer>
+        {notes ? (
+          <>
+            <NoteList notes={notes} revalidate={revalidate} />
+            <Footer>
+              <ul>
+                <li>
+                  <Link href="/">
+                    <a>
+                      <Home />
+                    </a>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/admin?id=new" as="/admin/new">
+                    <a>
+                      <FilePlus />
+                    </a>
+                  </Link>
+                </li>
+              </ul>
+            </Footer>
+          </>
+        ) : (
+          <Skeleton height="100vh" />
+        )}
         <Modal
           style={modalStyles}
           isOpen={!!router.query.id}
           onRequestClose={() => router.push('/admin')}
         >
           {isNew ? (
-            <Note isModal />
+            <Note isModal redirect="/admin" />
           ) : (
-            <Note note={note} revalidate={revalidate} isNew={isNew} isModal />
+            <Note
+              note={note}
+              revalidate={revalidate}
+              isNew={isNew}
+              isModal
+              redirect="/admin"
+            />
           )}
           <Footer>
             <ul>

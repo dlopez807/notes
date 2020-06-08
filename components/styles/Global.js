@@ -34,4 +34,7 @@ export default createGlobalStyle`
     word-wrap: break-word;
     margin: 0
   }
+  .ReactModal__Body--open {
+    overflow-y: hidden;
+  }
 `

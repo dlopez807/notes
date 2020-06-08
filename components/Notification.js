@@ -18,6 +18,8 @@ export default styled(ToastContainer).attrs({
   .Toastify__toast--error {
   }
   .Toastify__toast--warning {
+    background: ${props => props.theme.notification.warning.background};
+    color: ${props => props.theme.notification.warning.color};
   }
   .Toastify__toast--success {
     background: ${props => props.theme.notification.success};

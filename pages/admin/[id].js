@@ -8,7 +8,6 @@ export default () => {
     typeof window !== 'undefined' ? window.location.pathname.slice(1) : ''
   const [, id] = path.split('/')
   const { data, revalidate } = getNotes(id)
-  if (!data) return <Skeleton />
   const note = data || {
     title: '',
     body: '',
@@ -19,7 +18,11 @@ export default () => {
   return (
     <Page>
       <main>
-        <Note note={note} revalidate={revalidate} />
+        {data ? (
+          <Note note={note} revalidate={revalidate} redirect="/admin" />
+        ) : (
+          <Skeleton height="100vh" />
+        )}
       </main>
     </Page>
   )

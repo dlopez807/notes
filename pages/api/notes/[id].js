@@ -13,8 +13,8 @@ export default async (req, res) => {
   } = req
   connect(process.env.MLAB_URI)
   if (method === 'PATCH') {
-    const { title, body, slug, tags, hook } = req.body
-    const note = await saveNote({ id, title, body, slug, tags, hook })
+    const { title, body, slug, tags, hook, author } = req.body
+    const note = await saveNote({ id, title, body, slug, tags, hook, author })
     res.json(note)
   } else if (method === 'DELETE') {
     const response = await deleteNote(id)

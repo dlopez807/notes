@@ -4,7 +4,7 @@ import Note from '../../components/Note'
 export default () => (
   <Page>
     <main>
-      <Note />
+      <Note redirect="/admin" />
     </main>
   </Page>
 )

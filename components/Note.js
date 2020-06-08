@@ -64,7 +64,13 @@ const Footer = ({ isModal, children }) => {
   )
 }
 
-export default ({ note: initialNote, revalidate, isModal }) => {
+export default ({
+  note: initialNote,
+  revalidate,
+  isModal,
+  author,
+  redirect,
+}) => {
   const initialValues = {
     slug: initialNote?.slug ?? '',
     tags: initialNote?.tags.join(' ') ?? '',
@@ -82,6 +88,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
   } = useTextArea({
     initialContent,
     noteId: initialNote?._id,
+    redirect,
   })
   const {
     values: note,
@@ -100,11 +107,15 @@ export default ({ note: initialNote, revalidate, isModal }) => {
           body,
           slug: values.slug,
           tags: values.tags,
+          author,
         })
         toast.success('note saved')
         if (isModal)
-          Router.push(`/admin?id=${savedNote._id}`, `/admin/${savedNote._id}`)
-        else Router.push(`/admin/${savedNote._id}`)
+          Router.push(
+            `${redirect}?id=${savedNote._id}`,
+            `${redirect}/${savedNote._id}`
+          )
+        else Router.push(`${redirect}/${savedNote._id}`)
       } else {
         await updateNote({
           _id: initialNote._id,
@@ -122,7 +133,6 @@ export default ({ note: initialNote, revalidate, isModal }) => {
   })
 
   const { slug, tags, hook } = note
-
   return (
     <Note isModal={isModal}>
       <TextArea
@@ -132,6 +142,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
         placeholder="note"
         onChange={handleTextAreaChange}
         onKeyDown={handleKeyDown}
+        autoFocus
       />
       <input
         name="slug"
@@ -189,7 +200,7 @@ export default ({ note: initialNote, revalidate, isModal }) => {
               handleDelete={async () => {
                 await deleteNote(initialNote._id)
                 await revalidate()
-                Router.push('/admin')
+                Router.push(redirect)
               }}
             />
           </li>

@@ -1,30 +1,41 @@
 import styled from 'styled-components'
+import device from '../../config/device'
 
-export default styled.ul`
-  li {
+export default styled.div`
+  > * {
     margin-bottom: 1rem;
-    &:last-child {
-      margin-bottom: 0;
+  }
+  padding: 1rem;
+  header {
+    display: flex;
+    align-items: center;
+    > * {
+      margin-right: 1rem;
     }
-    input,
-    textarea {
-      width: 100%;
-      border: none;
-    }
-    textarea {
-      height: 25vh;
-    }
-    input {
-      background: ${props => props.theme.background};
-      color: ${props => props.theme.color};
-    }
-    button {
-      background: none;
-      border: none;
-      color: ${props => props.theme.color};
+    h1 {
+      svg {
+        color: ${props => props.theme.logo.color};
+      }
+      span {
+        display: none;
+      }
     }
     a {
       color: ${props => props.theme.color};
+      display: flex;
+      align-items: center;
+    }
+  }
+  @media ${device.tablet} {
+    width: 100vh;
+    margin: 0 auto;
+    header {
+      h1 {
+        flex-grow: 1;
+        span {
+          display: inline;
+        }
+      }
     }
   }
 `

@@ -1,4 +1,5 @@
-import { Copy, Scissors, Download } from 'react-feather'
+import Link from 'next/link'
+import { List, Scissors } from 'react-feather'
 import { toast } from 'react-toastify'
 
 import TextArea from './styles/TextArea'
@@ -6,14 +7,7 @@ import Footer from './styles/Footer'
 import useTextArea from '../lib/useTextArea'
 
 export default () => {
-  const {
-    textarea,
-    content,
-    handleChange,
-    handleKeyDown,
-    copy,
-    cut,
-  } = useTextArea()
+  const { textarea, content, handleChange, handleKeyDown, cut } = useTextArea()
   return (
     <>
       <TextArea
@@ -29,15 +23,11 @@ export default () => {
       <Footer>
         <ul>
           <li>
-            <button
-              type="button"
-              onClick={() => {
-                toast.success('copy')
-                copy()
-              }}
-            >
-              <Copy />
-            </button>
+            <Link href="/notes">
+              <a>
+                <List />
+              </a>
+            </Link>
           </li>
           <li>
             <button

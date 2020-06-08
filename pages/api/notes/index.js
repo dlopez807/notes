@@ -4,8 +4,8 @@ export default async (req, res) => {
   const { method, query } = req
   connect(process.env.MLAB_URI)
   if (method === 'POST') {
-    const { title, body, slug, tags, hook } = req.body
-    const note = await saveNote({ title, body, slug, tags, hook })
+    const { title, body, slug, tags, hook, author } = req.body
+    const note = await saveNote({ title, body, slug, tags, hook, author })
     res.json(note)
   } else {
     const notes = await getNotes({ query })

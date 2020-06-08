@@ -57,6 +57,26 @@ export default {
     },
     notification: {
       success: colors.giest.success.default,
+      warning: {
+        color: colors.giest.primary.accent1,
+        background: colors.giest.warning.default,
+      },
+    },
+    noteListItem: {
+      border: colors.giest.primary.accent5,
+    },
+    logo: {
+      color: colors.cobalt,
+    },
+    form: {
+      button: {
+        background: colors.cobalt,
+        color: colors.white,
+        disabled: {
+          background: colors.giest.primary.accent2,
+          color: colors.giest.primary.accent3,
+        },
+      },
     },
   },
   dark: {
