@@ -37,7 +37,7 @@ export default () => {
       )
     delete note._id
     delete note.createdAt
-    delete note.updateAt
+    delete note.updatedAt
     note.title = `${note.title} copy`
     return (
       <Page>
