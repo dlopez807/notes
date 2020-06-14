@@ -33,10 +33,11 @@ export default ({ note, copy, revalidate, author, redirect }) => {
   }
   return (
     <Modal
+      htmlOpenClassName="ReactModal__Html--open"
       style={modalStyles}
       isOpen={!!router.query.id || !!router.query.copy}
       onRequestClose={async () => {
-        await revalidate()
+        // await revalidate()
         router.push(pathname)
       }}
     >

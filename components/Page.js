@@ -6,8 +6,8 @@ import Notification from './Notification'
 import Layout from './styles/Layout'
 import Global from './styles/Global'
 
-const Page = ({ title, children }) => (
-  <Layout>
+const Page = ({ title, children, ...layoutOptions }) => (
+  <Layout {...layoutOptions}>
     <Head>
       <title>{title}</title>
     </Head>

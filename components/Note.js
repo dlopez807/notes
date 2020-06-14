@@ -27,10 +27,10 @@ const Note = styled.div`
       border: 1px solid ${props => props.theme.input.color};
     }
   }
-  textarea {
+  /* textarea {
     flex: 1 0 auto;
     height: auto;
-  }
+  } */
   input {
     background: ${props => props.theme.input.background};
     color: ${props => props.theme.input.color};
@@ -134,34 +134,38 @@ export default ({
 
   const { slug, tags, hook } = note
   return (
-    <Note isModal={isModal}>
-      <TextArea
-        ref={textarea}
-        name="body"
-        value={content}
-        placeholder="note"
-        onChange={handleTextAreaChange}
-        onKeyDown={handleKeyDown}
-        autoFocus
-      />
-      <input
-        name="slug"
-        value={slug}
-        placeholder="slug"
-        onChange={handleChange}
-      />
-      <input
-        name="tags"
-        value={tags}
-        placeholder="tags"
-        onChange={handleChange}
-      />
-      <input
-        name="hook"
-        value={hook}
-        placeholder="hook"
-        onChange={handleChange}
-      />
+    <>
+      <main>
+        <Note isModal={isModal}>
+          <TextArea
+            ref={textarea}
+            name="body"
+            value={content}
+            placeholder="note"
+            onChange={handleTextAreaChange}
+            onKeyDown={handleKeyDown}
+            autoFocus
+          />
+          <input
+            name="slug"
+            value={slug}
+            placeholder="slug"
+            onChange={handleChange}
+          />
+          <input
+            name="tags"
+            value={tags}
+            placeholder="tags"
+            onChange={handleChange}
+          />
+          <input
+            name="hook"
+            value={hook}
+            placeholder="hook"
+            onChange={handleChange}
+          />
+        </Note>
+      </main>
       <Footer isModal={isModal}>
         <li>
           <button
@@ -206,6 +210,6 @@ export default ({
           </li>
         )}
       </Footer>
-    </Note>
+    </>
   )
 }

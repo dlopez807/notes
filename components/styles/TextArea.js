@@ -6,15 +6,13 @@ export default styled.textarea`
   width: 100%;
   height: 100%;
   resize: none;
-  font-size: 3vh;
+  /* font-size: 3vh; */
+  font-size: 2rem;
   font-family: Arial, Helvetica;
-  padding: 5px;
-  border: 1px solid ${props => props.theme.input.background};
-  overflow: auto;
-  outline: none !important;
-  -webkit-box-shadow: none;
-  -moz-box-shadow: none;
+  padding: 0.5rem;
+  /* border: 1px solid ${props => props.theme.input.background}; */
+  border: none;
+  outline: none;
   box-shadow: none;
-  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 `

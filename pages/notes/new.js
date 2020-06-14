@@ -17,7 +17,7 @@ export default () => {
   if (id) {
     if (!notes)
       return (
-        <Page>
+        <Page full>
           <main>
             <Skeleton height="100vh" />
           </main>
@@ -26,7 +26,7 @@ export default () => {
     const note = notes[0]
     if (!note)
       return (
-        <Page>
+        <Page full>
           <main>
             <p>you are not authorized to copy this note</p>
             <Link href="/notes">
@@ -40,7 +40,7 @@ export default () => {
     delete note.updatedAt
     note.title = `${note.title} copy`
     return (
-      <Page>
+      <Page full>
         <main>
           <Note note={note} author={author} redirect="/notes" />
         </main>
@@ -48,14 +48,14 @@ export default () => {
     )
   }
   return (
-    <Page>
-      <main>
-        {user ? (
-          <Note author={author} redirect="/notes" />
-        ) : (
+    <Page full>
+      {user ? (
+        <Note author={author} redirect="/notes" />
+      ) : (
+        <main>
           <Skeleton height="100vh" />
-        )}
-      </main>
+        </main>
+      )}
     </Page>
   )
 }

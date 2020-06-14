@@ -1,8 +1,11 @@
+import Link from 'next/link'
+import { X } from 'react-feather'
 import { useState } from 'react'
 import Router, { useRouter } from 'next/router'
 import { Magic } from 'magic-sdk'
 
 import Form from './styles/Form'
+import Footer from './styles/Footer'
 import useUser from '../lib/useUser'
 import { login } from '../lib/api'
 
@@ -39,14 +42,29 @@ export default () => {
     }
   }
   return (
-    <Form onSubmit={submit}>
-      <h1>login</h1>
-      <input type="email" name="email" placeholder="email" required />
-      <button type="submit" disabled={submitting}>
-        submit
-        {submitting ? 'ting' : ''}
-      </button>
-      {errorMessage && <p className="error">{errorMessage}</p>}
-    </Form>
+    <>
+      <main>
+        <Form onSubmit={submit}>
+          <h1>login</h1>
+          <input type="email" name="email" placeholder="email" required />
+          <button type="submit" disabled={submitting}>
+            submit
+            {submitting ? 'ting' : ''}
+          </button>
+          {errorMessage && <p className="error">{errorMessage}</p>}
+        </Form>
+      </main>
+      <Footer>
+        <ul>
+          <li>
+            <Link href="/">
+              <a>
+                <X />
+              </a>
+            </Link>
+          </li>
+        </ul>
+      </Footer>
+    </>
   )
 }

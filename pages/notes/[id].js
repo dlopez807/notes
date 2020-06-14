@@ -15,7 +15,7 @@ export default () => {
   const { data: notes, revalidate } = searchNotes({ author, _id: id })
   if (!notes)
     return (
-      <Page>
+      <Page full>
         <main>
           <Skeleton height="100vh" />
         </main>
@@ -24,7 +24,7 @@ export default () => {
   const note = notes[0]
   if (!note)
     return (
-      <Page>
+      <Page full>
         <main>
           <p>you are not authorized to see this note</p>
           <Link href="/notes">
@@ -34,10 +34,8 @@ export default () => {
       </Page>
     )
   return (
-    <Page>
-      <main>
-        <Note note={note} revalidate={revalidate} redirect="/notes" />
-      </main>
+    <Page full>
+      <Note note={note} revalidate={revalidate} redirect="/notes" />
     </Page>
   )
 }

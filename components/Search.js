@@ -1,7 +1,9 @@
 import { X } from 'react-feather'
 
+import Search from './styles/Search'
+
 export default ({ search, onChange, onKeyDown, clear, searchRef, list }) => (
-  <div className="search">
+  <Search>
     <input
       ref={searchRef}
       type="text"
@@ -16,5 +18,5 @@ export default ({ search, onChange, onKeyDown, clear, searchRef, list }) => (
         <X height="2rem" width="2rem" />
       </button>
     )}
-  </div>
+  </Search>
 )

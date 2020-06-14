@@ -3,12 +3,11 @@ import styled from 'styled-components'
 import device from '../../config/device'
 
 export default styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 1rem;
+  > *:not(:last-child) {
+    margin-bottom: 1rem;
+  }
   h1,
+  h2,
   input,
   button {
     text-align: center;
@@ -16,7 +15,7 @@ export default styled.form`
   input,
   button {
     width: 100%;
-    margin-top: 1rem;
+    /* margin-top: 1rem; */
     border: none;
     border-radius: 0.25rem;
     padding: 1rem;

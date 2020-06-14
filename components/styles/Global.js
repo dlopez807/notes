@@ -25,6 +25,9 @@ export default createGlobalStyle`
   ul {
     padding: 0;
   }
+  p {
+    margin: 0;
+  }
   pre {
     overflow-x: auto;
     white-space: pre-wrap;
@@ -34,7 +37,20 @@ export default createGlobalStyle`
     word-wrap: break-word;
     margin: 0
   }
-  .ReactModal__Body--open {
+  /* .ReactModal__Body--open {
     overflow-y: hidden;
+  } */
+  .ReactModal__Body--open {
+    position: static;
+    overflow-y: scroll;
+  }
+
+  .ReactModal__Html--open {
+    overflow-y: hidden;
+  }
+
+  .ReactModalPortal {
+    position: fixed;
+    z-index: 1 !important;
   }
 `

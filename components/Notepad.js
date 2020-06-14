@@ -10,16 +10,17 @@ export default () => {
   const { textarea, content, handleChange, handleKeyDown, cut } = useTextArea()
   return (
     <>
-      <TextArea
-        ref={textarea}
-        placeholder="notepad"
-        name="content"
-        className="content"
-        value={content}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        autoFocus
-      />
+      <main>
+        <TextArea
+          ref={textarea}
+          placeholder="notepad"
+          name="content"
+          value={content}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+          autoFocus
+        />
+      </main>
       <Footer>
         <ul>
           <li>
