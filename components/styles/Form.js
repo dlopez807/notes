@@ -21,15 +21,25 @@ export default styled.form`
     padding: 1rem;
   }
   button {
+    display: flex;
+    justify-content: center;
     background: ${props => props.theme.form.button.background};
     color: ${props => props.theme.form.button.color};
     &[disabled] {
       background: ${props => props.theme.form.button.disabled.background};
       color: ${props => props.theme.form.button.disabled.color};
     }
+    &.delete {
+      background: ${props => props.theme.form.button.delete.background};
+      &[disabled] {
+        background: ${props =>
+          props.theme.form.button.delete.disabled.background};
+        color: ${props => props.theme.form.button.delete.disabled.color};
+      }
+    }
   }
   .error {
-    color: red;
+    color: ${props => props.theme.form.error};
   }
   @media ${device.tablet} {
     width: 50vh;

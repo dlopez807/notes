@@ -1,23 +1,48 @@
 import { useState } from 'react'
-import { func } from 'prop-types'
+import { func, node, bool } from 'prop-types'
 import { Trash2, CheckCircle, XCircle } from 'react-feather'
 
-const Delete = ({ handleDelete }) => {
+const Delete = ({
+  handleDelete,
+  isSubmitting,
+  confirm,
+  confirming,
+  cancel,
+  children,
+  ...props
+}) => {
   const [confirmDelete, setConfirmDelete] = useState(false)
   return (
     <>
       {confirmDelete ? (
         <>
-          <button type="button" onClick={handleDelete}>
-            <CheckCircle />
+          <button
+            className="delete"
+            type="button"
+            disabled={isSubmitting}
+            onClick={async () => {
+              await handleDelete()
+              setConfirmDelete(false)
+            }}
+          >
+            {isSubmitting ? confirming : confirm}
           </button>
-          <button type="button" onClick={() => setConfirmDelete(false)}>
-            <XCircle />
+          <button
+            className="delete-cancel"
+            type="button"
+            onClick={() => setConfirmDelete(false)}
+          >
+            {cancel}
           </button>
         </>
       ) : (
-        <button type="button" onClick={() => setConfirmDelete(true)}>
-          <Trash2 />
+        <button
+          className="delete"
+          type="button"
+          {...props}
+          onClick={() => setConfirmDelete(true)}
+        >
+          {children}
         </button>
       )}
     </>
@@ -26,6 +51,19 @@ const Delete = ({ handleDelete }) => {
 
 Delete.propTypes = {
   handleDelete: func.isRequired,
+  confirm: node,
+  confirming: node,
+  cancel: node,
+  isSubmitting: bool,
+  children: node,
+}
+
+Delete.defaultProps = {
+  confirm: <CheckCircle />,
+  confirming: <CheckCircle />,
+  cancel: <XCircle />,
+  isSubmitting: false,
+  children: <Trash2 />,
 }
 
 export default Delete

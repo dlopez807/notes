@@ -76,7 +76,14 @@ export default {
           background: colors.giest.primary.accent2,
           color: colors.giest.primary.accent3,
         },
+        delete: {
+          background: colors.giest.error.dark,
+          disabled: {
+            background: colors.giest.error.light,
+          },
+        },
       },
+      error: colors.giest.error.default,
     },
   },
   dark: {
