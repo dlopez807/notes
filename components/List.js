@@ -1,10 +1,17 @@
 import { useState } from 'react'
+import Link from 'next/link'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { Move, X, Check, Search as SearchIcon } from 'react-feather'
+import { toast } from 'react-toastify'
 
+import Search from './Search'
 import List from './styles/List'
+import Footer from './styles/Footer'
+import { updateNote } from '../lib/api'
+import useSearch from '../lib/useSearch'
 
-const regex = /\d+\s/
-const removeNumbers = item => item.replace(regex, '')
+const numberSpaceRegex = /\d+\s/
+const removeNumbers = item => item.replace(numberSpaceRegex, '')
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list)
@@ -14,7 +21,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result
 }
 
-const DND = ({ items, setItems, isOrderedList }) => (
+const DND = ({ items, reorderItems, isOrderedList }) => (
   <DragDropContext
     onDragEnd={result => {
       // dropped outside the list
@@ -28,7 +35,7 @@ const DND = ({ items, setItems, isOrderedList }) => (
         result.destination.index
       )
 
-      setItems(newItems)
+      reorderItems(newItems)
     }}
   >
     <Droppable droppableId="droppable">
@@ -51,7 +58,8 @@ const DND = ({ items, setItems, isOrderedList }) => (
                   >
                     {isOrderedList
                       ? `${index + 1}. ${removeNumbers(item)}`
-                      : item}
+                      : item}{' '}
+                    <Move height="2rem" />
                   </div>
                 )
               }}
@@ -64,27 +72,101 @@ const DND = ({ items, setItems, isOrderedList }) => (
   </DragDropContext>
 )
 
-export default ({ list, editOrder }) => {
+export default ({ note: { _id, list, title } }) => {
+  const { search, setSearch, results, searchRef } = useSearch({
+    list: list || [],
+  })
   const [items, setItems] = useState(list)
-  const isOrderedList = items.every(item => regex.test(item))
-  console.log({ items, isOrderedList })
+  const [editListOrder, setEditListOrder] = useState(false)
+  const reorderList = async newItems => {
+    if (newItems.length === items.length) {
+      setItems(newItems)
+      const newBody = `\n${newItems.join('\n')}`
+      await updateNote({
+        _id,
+        body: newBody,
+      })
+      toast.success('list updated')
+    } else toast.error('list reorder failed')
+  }
+  const isOrderedList = items.every(item => numberSpaceRegex.test(item))
   return (
-    <List>
-      {editOrder ? (
-        <DND isOrderedList={isOrderedList} items={items} setItems={setItems} />
-      ) : isOrderedList ? (
-        <ol>
-          {items.map(removeNumbers).map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ol>
-      ) : (
+    <>
+      <main>
+        <List>
+          <h1>{title.replace('= ', '')}</h1>
+          <Search
+            search={search}
+            setSearch={setSearch}
+            onChange={e => setSearch(e.target.value)}
+            clear={() => setSearch('')}
+            onKeyDown={e => {
+              const { key } = e
+              if (key === 'Escape') {
+                setSearch('')
+              }
+            }}
+            searchRef={searchRef}
+          />
+          {search !== '' && results.length > 0 ? (
+            <ul>
+              {results.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          ) : editListOrder ? (
+            <DND
+              isOrderedList={isOrderedList}
+              items={items}
+              reorderItems={reorderList}
+            />
+          ) : isOrderedList ? (
+            <ol>
+              {items.map(removeNumbers).map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ol>
+          ) : (
+            <ul>
+              {items.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          )}
+        </List>
+      </main>
+      <Footer>
         <ul>
-          {items.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
+          <li>
+            <button
+              type="button"
+              onClick={() => {
+                searchRef.current.focus()
+              }}
+            >
+              <SearchIcon />
+            </button>
+          </li>
+          <li>
+            <Link href="/notes">
+              <a>
+                <X />
+              </a>
+            </Link>
+          </li>
+          <li>
+            <button
+              type="button"
+              disabled={search !== ''}
+              onClick={() => {
+                setEditListOrder(!editListOrder)
+              }}
+            >
+              {editListOrder ? <Check /> : <Move />}
+            </button>
+          </li>
         </ul>
-      )}
-    </List>
+      </Footer>
+    </>
   )
 }

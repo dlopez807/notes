@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Edit, Copy, ArrowRightCircle } from 'react-feather'
+import { Edit, Copy, ArrowRightCircle, List } from 'react-feather'
 import { toast } from 'react-toastify'
 
 import Delete from './Delete'
@@ -48,7 +48,7 @@ export default ({ notes, revalidate }) => {
   const admin = pathname.includes('admin')
   return (
     <NoteList>
-      {notes.map(({ _id, title, tags, slug, author }) => (
+      {notes.map(({ _id, title, tags, slug, author, list }) => (
         <li key={_id}>
           <h2 data-id={_id}>{title}</h2>
           {tags && <Tags tags={tags} />}
@@ -58,6 +58,13 @@ export default ({ notes, revalidate }) => {
                 <Edit />
               </a>
             </Link>
+            {list && (
+              <Link href={`/lists/${_id}`}>
+                <a>
+                  <List />
+                </a>
+              </Link>
+            )}
             {!admin && (
               <Link href={`${pathname}?copy=${_id}`} as={pathname}>
                 {/* <Link href={`${pathname}/new?id=${_id}`} as={`${pathname}/new`}> */}

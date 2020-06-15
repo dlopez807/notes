@@ -85,6 +85,12 @@ export default {
       },
       error: colors.giest.error.default,
     },
+    list: {
+      background: colors.giest.primary.accent3,
+      alt: {
+        background: colors.giest.primary.accent4,
+      },
+    },
   },
   dark: {
     background: colors.black,
