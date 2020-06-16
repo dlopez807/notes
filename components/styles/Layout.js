@@ -29,7 +29,7 @@ export default styled.div`
     }
 
     @media ${device.tablet} {
-      width: ${props => !props.full && '100vh'};
+      max-width: ${props => !props.full && '100vh'};
       margin: ${props => !props.full && '0 auto'};
     }
   }
