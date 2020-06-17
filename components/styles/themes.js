@@ -83,12 +83,24 @@ export default {
           },
         },
       },
+      text: {
+        disabled: {
+          color: colors.giest.primary.accent3,
+        },
+      },
       error: colors.giest.error.default,
     },
     list: {
       background: colors.giest.primary.accent3,
       alt: {
         background: colors.giest.primary.accent4,
+      },
+    },
+    checklist: {
+      background: colors.cobalt,
+      color: colors.white,
+      duplicate: {
+        border: colors.giest.warning.default,
       },
     },
   },

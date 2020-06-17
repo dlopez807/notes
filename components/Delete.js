@@ -21,8 +21,8 @@ const Delete = ({
             type="button"
             disabled={isSubmitting}
             onClick={async () => {
-              await handleDelete()
               setConfirmDelete(false)
+              await handleDelete()
             }}
           >
             {isSubmitting ? confirming : confirm}

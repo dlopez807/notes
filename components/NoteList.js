@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { Edit, Copy, ArrowRightCircle, List } from 'react-feather'
+import { Edit, Copy, ArrowRightCircle, List, CheckSquare } from 'react-feather'
 import { toast } from 'react-toastify'
 
 import Delete from './Delete'
@@ -62,6 +62,13 @@ export default ({ notes, revalidate }) => {
               <Link href={`/lists/${_id}`}>
                 <a>
                   <List />
+                </a>
+              </Link>
+            )}
+            {title.startsWith('[ ') && (
+              <Link href={`/checklists/${_id}`}>
+                <a>
+                  <CheckSquare />
                 </a>
               </Link>
             )}
