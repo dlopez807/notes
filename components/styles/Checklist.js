@@ -44,6 +44,9 @@ export default styled.div`
           text-decoration: line-through;
         }
       }
+      input[type='checkbox'] {
+        transform: scale(1.25);
+      }
       svg {
         height: 2rem;
       }

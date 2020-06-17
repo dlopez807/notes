@@ -27,7 +27,14 @@ const reorder = (list, startIndex, endIndex) => {
   return result
 }
 
-const ChecklistItem = ({ item, toggleCheck, editItem, deleteItem }) => {
+const ChecklistItem = ({
+  item,
+  toggleCheck,
+  editItem,
+  deleteItem,
+  addItem,
+  changeFocus,
+}) => {
   const { name, checked, ref } = item
   return (
     <>
@@ -39,12 +46,34 @@ const ChecklistItem = ({ item, toggleCheck, editItem, deleteItem }) => {
       />
       <input
         ref={ref}
-        className={checked ? 'checked' : ''}
+        className={checked && 'checked'}
         readOnly={checked || !editItem}
         type="text"
         name="item"
         value={name}
         onChange={e => editItem(e.target.value)}
+        onKeyDown={async e => {
+          const { key } = e
+          if (addItem && key === 'Enter') await addItem()
+          if (deleteItem && name === '' && key === 'Backspace') {
+            e.preventDefault()
+            const refocus = true
+            await deleteItem(refocus)
+          }
+          if (deleteItem && name === '' && key === 'Delete') {
+            e.preventDefault()
+            const refocus = true
+            const offset = 1
+            await deleteItem(refocus, offset)
+          }
+          if (changeFocus) {
+            if (key === 'ArrowUp') {
+              changeFocus(-1)
+            } else if (key === 'ArrowDown') {
+              changeFocus(1)
+            }
+          }
+        }}
       />
       {deleteItem && (
         <Delete handleDelete={deleteItem} tabIndex="-1">
@@ -86,7 +115,7 @@ const DND = ({ items, reorderItems, isDuplicate }) => (
                 delete dragHandleProps.tabIndex
                 return (
                   <div
-                    className={isDuplicate(item.name) ? 'duplicate' : ''}
+                    className={isDuplicate(item.name) && 'duplicate'}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...dragHandleProps}
@@ -154,11 +183,15 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
       updateItems(newItems)
     } else toast.error('checklist reorder failed')
   }
-  const addItem = async () => {
+  const addItem = async (index = 0) => {
+    const newItem = { name: '', checked: false, ref: newItemRef }
     const newItems = [
-      { name: '', checked: false, ref: newItemRef },
-      ...items.map(({ name, checked }) => ({ name, checked })),
+      ...items.map(({ name, checked }) => ({
+        name,
+        checked,
+      })),
     ]
+    newItems.splice(index, 0, newItem)
     updateItems(newItems)
   }
   const isDuplicate = name => {
@@ -189,7 +222,7 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
                 {results.map((item, index) => (
                   <li
                     key={index}
-                    className={isDuplicate(item.name) ? 'duplicate' : ''}
+                    className={isDuplicate(item.name) && 'duplicate'}
                   >
                     <ChecklistItem
                       item={item}
@@ -225,7 +258,7 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
               {items.map((item, index) => (
                 <li
                   key={index}
-                  className={isDuplicate(item.name) ? 'duplicate' : ''}
+                  className={isDuplicate(item.name) && 'duplicate'}
                 >
                   <ChecklistItem
                     item={item}
@@ -239,10 +272,46 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
                       newItems[index].name = newItem
                       updateItems(newItems)
                     }}
-                    deleteItem={async () => {
-                      const newItems = [...items]
-                      newItems.splice(index, 1)
-                      updateItems(newItems)
+                    deleteItem={async (refocus = false, offset = -1) => {
+                      if (refocus && items.length > 1) {
+                        const newItems = [
+                          ...items.map(({ name, checked }) => ({
+                            name,
+                            checked,
+                          })),
+                        ]
+                        const newIndex = index + offset
+                        newItems[newIndex > -1 ? newIndex : 1].ref = newItemRef
+                        newItems.splice(index, 1)
+                        await updateItems(newItems)
+                        newItemRef.current.focus()
+                      } else {
+                        const newItems = [...items]
+                        newItems.splice(index, 1)
+                        updateItems(newItems)
+                      }
+                    }}
+                    addItem={async () => {
+                      await addItem(index + 1)
+                      newItemRef.current.focus()
+                    }}
+                    changeFocus={async (offset = 0) => {
+                      if (offset !== 0) {
+                        const newItems = [
+                          ...items.map(({ name, checked }) => ({
+                            name,
+                            checked,
+                          })),
+                        ]
+                        const newIndex = index + offset
+                        if (newIndex > -1 && newIndex < items.length) {
+                          if (!newItems[newIndex].checked) {
+                            newItems[newIndex].ref = newItemRef
+                            await updateItems(newItems)
+                            newItemRef.current.focus()
+                          }
+                        }
+                      }
                     }}
                   />
                 </li>
