@@ -36,6 +36,9 @@ export default styled.div`
     cursor: text;
     position: relative;
   }
+  h1 {
+    margin-top: 0;
+  }
 
   h2:first-child,
   h1:first-child,
