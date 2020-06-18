@@ -36,7 +36,11 @@ export default styled.ul`
       color: ${props => props.theme.color};
     }
     .tags {
+      display: flex;
       list-style: none;
+      > * {
+        margin-right: 1rem;
+      }
     }
     .commands {
       display: flex;
