@@ -55,29 +55,35 @@ export default () => {
   return (
     <>
       <main>
-        <Search
-          search={search}
-          setSearch={setSearch}
-          onChange={e => setSearch(e.target.value)}
-          clear={() => setSearch('')}
-          onKeyDown={e => {
-            const { key } = e
-            if (key === 'Enter') {
-              e.preventDefault()
-              addTag(e.target.value)
-              setSearch('')
-            } else if (key === 'Escape') {
-              setSearch('')
-            }
-          }}
-          searchRef={searchRef}
-          list="tags"
-        />
-        <datalist id="tags">
-          {noteTags.filter(nTag => !tags.some(tag => tag === nTag)).map(tag => (
-            <option key={tag} value={tag} />
-          ))}
-        </datalist>
+        {notes?.length > 0 && (
+          <>
+            <Search
+              search={search}
+              setSearch={setSearch}
+              onChange={e => setSearch(e.target.value)}
+              clear={() => setSearch('')}
+              onKeyDown={e => {
+                const { key } = e
+                if (key === 'Enter') {
+                  e.preventDefault()
+                  addTag(e.target.value)
+                  setSearch('')
+                } else if (key === 'Escape') {
+                  setSearch('')
+                }
+              }}
+              searchRef={searchRef}
+              list="tags"
+            />
+            <datalist id="tags">
+              {noteTags
+                .filter(nTag => !tags.some(tag => tag === nTag))
+                .map(tag => (
+                  <option key={tag} value={tag} />
+                ))}
+            </datalist>
+          </>
+        )}
         {tags.length > 0 && (
           <Tags>
             {tags.map(tag => (
