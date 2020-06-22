@@ -133,6 +133,7 @@ export default ({
   })
 
   const { slug, tags, hook } = note
+  const autoFocus = !initialNote
   return (
     <>
       <main>
@@ -144,7 +145,7 @@ export default ({
             placeholder="note"
             onChange={handleTextAreaChange}
             onKeyDown={handleKeyDown}
-            autoFocus
+            autoFocus={autoFocus}
           />
           <input
             name="slug"
@@ -188,11 +189,12 @@ export default ({
             <button
               type="button"
               onClick={async () => {
-                const res = await deployNote(initialNote._id)
-                console.log({ deployRes: res })
-                toast.success('note deployed')
+                const { error } = await deployNote(initialNote._id)
+                if (error)
+                  toast.error('there was an error deploying. try again')
+                else toast.success('note deployed')
               }}
-              disabled={dirty}
+              disabled={dirty || dirtyTextArea}
             >
               <ArrowUpCircle />
             </button>

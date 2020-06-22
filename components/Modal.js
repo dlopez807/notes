@@ -36,10 +36,7 @@ export default ({ note, copy, revalidate, author, redirect }) => {
       htmlOpenClassName="ReactModal__Html--open"
       style={modalStyles}
       isOpen={!!router.query.id || !!router.query.copy}
-      onRequestClose={async () => {
-        // await revalidate()
-        router.push(pathname)
-      }}
+      onRequestClose={router.back}
     >
       {copy ? (
         <Note isModal note={copy} author={author} redirect={redirect} />
@@ -65,11 +62,9 @@ export default ({ note, copy, revalidate, author, redirect }) => {
             </Link>
           </li>
           <li>
-            <Link href={pathname}>
-              <a>
-                <X />
-              </a>
-            </Link>
+            <button type="button" onClick={router.back}>
+              <X />
+            </button>
           </li>
         </ul>
       </Footer>
