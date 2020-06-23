@@ -6,10 +6,14 @@ import Notification from './Notification'
 import Layout from './styles/Layout'
 import Global from './styles/Global'
 
+const DEFAULT_TITLE = 'notes'
+
 const Page = ({ title, children, ...layoutOptions }) => (
   <Layout {...layoutOptions}>
     <Head>
-      <title>{title}</title>
+      <title>
+        {title === DEFAULT_TITLE ? title : `${title} - ${DEFAULT_TITLE}`}
+      </title>
     </Head>
     <Normalize />
     <Global />
@@ -24,7 +28,7 @@ Page.propTypes = {
 }
 
 Page.defaultProps = {
-  title: 'notes',
+  title: DEFAULT_TITLE,
 }
 
 export default Page

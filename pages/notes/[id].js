@@ -34,7 +34,7 @@ export default () => {
       </Page>
     )
   return (
-    <Page full>
+    <Page title={note.title} full>
       <Note note={note} revalidate={revalidate} redirect="/notes" />
     </Page>
   )

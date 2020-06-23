@@ -46,7 +46,7 @@ export default () => {
       </Page>
     )
   return (
-    <Page>
+    <Page title={note.title.replace('= ', '')}>
       <List note={note} />
     </Page>
   )
