@@ -111,11 +111,11 @@ export default ({
         })
         toast.success('note saved')
         if (isModal)
-          Router.push(
+          Router.replace(
             `${redirect}?id=${savedNote._id}`,
             `${redirect}/${savedNote._id}`
           )
-        else Router.push(`${redirect}/${savedNote._id}`)
+        else Router.replace(`${redirect}/${savedNote._id}`)
       } else {
         await updateNote({
           _id: initialNote._id,
