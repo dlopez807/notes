@@ -15,7 +15,6 @@ import { searchNotes } from '../lib/api'
 export default () => {
   const router = useRouter()
   const user = useUser({ redirectTo: '/login?next=/notes' })
-  // const user = null
   const author = user?.email
   const { data: notes, revalidate } = searchNotes({ author })
   const {
@@ -76,6 +75,9 @@ export default () => {
               list="tags"
             />
             <datalist id="tags">
+              <option value="list" />
+              <option value="checklist" />
+              <option value="markdown" />
               {noteTags
                 .filter(nTag => !tags.some(tag => tag === nTag))
                 .map(tag => (
