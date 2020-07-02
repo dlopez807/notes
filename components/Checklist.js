@@ -46,7 +46,7 @@ const ChecklistItem = ({
       />
       <input
         ref={ref}
-        className={checked && 'checked'}
+        className={checked ? 'checked' : undefined}
         readOnly={checked || !editItem}
         type="text"
         name="item"
@@ -115,7 +115,7 @@ const DND = ({ items, reorderItems, isDuplicate }) => (
                 delete dragHandleProps.tabIndex
                 return (
                   <div
-                    className={isDuplicate(item.name) && 'duplicate'}
+                    className={isDuplicate(item.name) ? 'duplicate' : undefined}
                     ref={provided.innerRef}
                     {...provided.draggableProps}
                     {...dragHandleProps}
@@ -222,7 +222,7 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
                 {results.map((item, index) => (
                   <li
                     key={index}
-                    className={isDuplicate(item.name) && 'duplicate'}
+                    className={isDuplicate(item.name) ? 'duplicate' : undefined}
                   >
                     <ChecklistItem
                       item={item}
@@ -258,7 +258,7 @@ export default ({ note: { _id, table, title, body }, revalidate }) => {
               {items.map((item, index) => (
                 <li
                   key={index}
-                  className={isDuplicate(item.name) && 'duplicate'}
+                  className={isDuplicate(item.name) ? 'duplicate' : undefined}
                 >
                   <ChecklistItem
                     item={item}
