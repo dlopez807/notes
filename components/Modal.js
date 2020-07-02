@@ -39,9 +39,20 @@ export default ({ note, copy, revalidate, author, redirect }) => {
       onRequestClose={router.back}
     >
       {copy ? (
-        <Note isModal note={copy} author={author} redirect={redirect} />
+        <Note
+          isModal
+          note={copy}
+          author={author}
+          redirect={redirect}
+          revalidate={revalidate}
+        />
       ) : isNew ? (
-        <Note isModal author={author} redirect={redirect} />
+        <Note
+          isModal
+          author={author}
+          redirect={redirect}
+          revalidate={revalidate}
+        />
       ) : (
         <Note
           note={note}

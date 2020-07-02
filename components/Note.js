@@ -110,6 +110,7 @@ export default ({
           author,
         })
         toast.success('note saved')
+        await revalidate()
         if (isModal)
           Router.replace(
             `${redirect}?id=${savedNote._id}`,
