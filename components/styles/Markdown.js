@@ -1,8 +1,10 @@
 import styled from 'styled-components'
 
-export default styled.div`
-  padding: 0 1rem;
+import device from '../../config/device'
 
+export default styled.div`
+  /* padding: 0 1rem; */
+  padding-bottom: 3em;
   a {
     color: #4183c4;
     text-decoration: none;
@@ -126,7 +128,11 @@ export default styled.div`
   li,
   table,
   pre {
-    margin: 15px 0;
+    /* margin: 15px 0; */
+    margin: 0 0 1rem 0;
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   hr {
@@ -381,12 +387,16 @@ export default styled.div`
 
   code,
   tt {
-    margin: 0 2px;
-    padding: 0 5px;
+    /* margin: 0 2px;
+    padding: 0 5px; */
+    padding: 1rem;
+    display: block;
     white-space: nowrap;
-    border: 1px solid #eaeaea;
+    /* border: 1px solid #eaeaea;
     background-color: #f8f8f8;
-    border-radius: 3px;
+    border-radius: 3px; */
+    background-color: ${props => props.theme.input.background};
+    border: 1px solid #cccccc;
   }
 
   pre code {
@@ -409,12 +419,13 @@ export default styled.div`
 
   pre {
     background-color: #f8f8f8;
-    background-color: ${props => props.theme.background};
+    background-color: ${props => props.theme.input.background};
     border: 1px solid #cccccc;
-    font-size: 13px;
+    /* font-size: 13px; */
     line-height: 19px;
     overflow: auto;
-    padding: 6px 10px;
+    /* padding: 6px 10px; */
+    padding: 1rem;
     border-radius: 3px;
   }
 
@@ -422,5 +433,9 @@ export default styled.div`
   pre tt {
     background-color: transparent;
     border: none;
+  }
+  @media ${device.tablet} {
+    width: 50vh;
+    margin: 0 auto;
   }
 `
