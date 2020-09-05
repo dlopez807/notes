@@ -1,3 +1,5 @@
+import { update } from '../../../lib/db'
+
 const {
   connect,
   getNotes,
@@ -15,6 +17,7 @@ export default async (req, res) => {
   if (method === 'PATCH') {
     const { title, body, slug, tags, hook, author } = req.body
     const note = await saveNote({ id, title, body, slug, tags, hook, author })
+    await update(note)
     res.json(note)
   } else if (method === 'DELETE') {
     const response = await deleteNote(id)
