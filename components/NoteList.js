@@ -15,7 +15,7 @@ import Delete from './Delete'
 import NoteList from './styles/NoteList'
 import { deleteNote, updateNote } from '../lib/api'
 
-const AuthorField = ({ author: initialAuthor, id }) => {
+const AuthorField = ({ author: initialAuthor, id, revalidate }) => {
   const [author, setAuthor] = useState(initialAuthor || '')
   return (
     <div className="author">
@@ -32,6 +32,7 @@ const AuthorField = ({ author: initialAuthor, id }) => {
             _id: id,
             author,
           })
+          await revalidate()
           toast.success('author updated')
         }}
       >
@@ -109,7 +110,9 @@ export default ({ notes, revalidate }) => {
               }}
             />
           </div>
-          {admin && <AuthorField author={author} id={_id} />}
+          {admin && (
+            <AuthorField author={author} id={_id} revalidate={revalidate} />
+          )}
         </li>
       ))}
     </NoteList>
