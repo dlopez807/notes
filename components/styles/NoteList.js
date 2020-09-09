@@ -22,6 +22,11 @@ export default styled.ul`
     &.skeleton {
       padding: 0;
     }
+    h2 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     a,
     button {
       display: flex;
