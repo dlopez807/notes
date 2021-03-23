@@ -12,15 +12,19 @@ import { updateNote, searchNotes } from '../lib/api'
 export default () => {
   const slug =
     typeof window !== 'undefined' ? window.location.pathname.slice(1) : ''
-  const [editOrder, setEditOrder] = useState(false)
+  const [editOrder] = useState(false)
   const { data } = searchNotes({ slug })
   const notes = data || {}
-  if (!data) return <div>loading</div>
+  if (!data)
+    return (
+      <Page>
+        <main>loading</main>
+      </Page>
+    )
   const [note] = notes
   const { markdown, list, table } = note
-  console.log({ note })
   const editNote = async updates => updateNote({ _id: note._id, ...updates })
-  const title = `notes -${
+  const title = `${
     markdown
       ? note.title.replace('# ', '')
       : list
