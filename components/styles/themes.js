@@ -103,6 +103,14 @@ export default {
         border: colors.giest.warning.default,
       },
     },
+    tag: {
+      borderColor: colors.white,
+      background: {
+        default: colors.black,
+        selected: colors.cobalt,
+      },
+      color: colors.white,
+    },
   },
   dark: {
     background: colors.black,

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { X, FilePlus, Search as SearchIcon } from 'react-feather'
@@ -13,20 +14,20 @@ import useSearch from '../lib/useSearch'
 import { searchNotes } from '../lib/api'
 
 export default () => {
+  const [selectedTags, setSelectedTags] = useState([])
   const router = useRouter()
   const user = useUser({ redirectTo: '/login?next=/notes' })
   const author = user?.email
   const { data: notes, revalidate } = searchNotes({ author })
-  const {
-    search,
-    setSearch,
-    tags,
-    addTag,
-    removeTag,
-    results,
-    searchRef,
-  } = useSearch({
-    list: notes || [],
+  const { search, setSearch, results, searchRef } = useSearch({
+    list:
+      notes?.filter(
+        note =>
+          selectedTags.length === 0 ||
+          (selectedTags.includes('none') &&
+            (!note.tags || note.tags.length === 0 || note.tags[0] === '')) ||
+          selectedTags.some(t => note.tags.some(noteTag => noteTag === t))
+      ) || [],
     options: {
       keys: ['title', 'body', 'tags'],
     },
@@ -40,7 +41,7 @@ export default () => {
     delete copy.updatedAt
     copy.title = `${copy.title} copy`
   }
-  const noteList = search === '' && tags.length === 0 ? notes : results
+  const noteList = search === '' && selectedTags.length === 0 ? notes : results
   const noteTags = [
     ...new Set(
       notes
@@ -50,7 +51,7 @@ export default () => {
         }, [])
         .flat()
     ),
-  ]
+  ].filter(tag => tag !== '')
   return (
     <>
       <main>
@@ -63,41 +64,33 @@ export default () => {
               clear={() => setSearch('')}
               onKeyDown={e => {
                 const { key } = e
-                if (key === 'Enter') {
-                  e.preventDefault()
-                  addTag(e.target.value)
-                  setSearch('')
-                } else if (key === 'Escape') {
+                if (key === 'Escape') {
                   setSearch('')
                 }
               }}
               searchRef={searchRef}
-              list="tags"
             />
-            <datalist id="tags">
-              <option value="list" />
-              <option value="checklist" />
-              <option value="markdown" />
-              {noteTags
-                .filter(nTag => !tags.some(tag => tag === nTag))
-                .map(tag => (
-                  <option key={tag} value={tag} />
-                ))}
-            </datalist>
           </>
         )}
-        {tags.length > 0 && (
+        {noteTags.length > 0 && (
           <Tags>
-            {tags.map(tag => (
-              <li key={tag}>
-                {tag}{' '}
+            {noteTags.map(tag => (
+              <li
+                key={tag}
+                className={selectedTags.includes(tag) ? 'selected' : ''}
+              >
                 <button
                   type="button"
                   onClick={() => {
-                    removeTag(tag)
+                    const newSelectedTags = [...selectedTags]
+                    const index = newSelectedTags.findIndex(t => t === tag)
+                    if (index > -1) {
+                      newSelectedTags.splice(index, 1)
+                    } else newSelectedTags.push(tag)
+                    setSelectedTags(newSelectedTags)
                   }}
                 >
-                  <X />
+                  {tag}
                 </button>
               </li>
             ))}
