@@ -4,7 +4,7 @@ const { connect, getNotes, saveNote } = require('@baconjuice/notes')
 
 export default async (req, res) => {
   const { method, query } = req
-  connect(process.env.MLAB_URI)
+  connect(process.env.MONGO_URI)
   if (method === 'POST') {
     const { title, body, slug, tags, hook, author } = req.body
     const note = await saveNote({ title, body, slug, tags, hook, author })

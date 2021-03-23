@@ -13,7 +13,7 @@ export default async (req, res) => {
     method,
     query: { id },
   } = req
-  connect(process.env.MLAB_URI)
+  connect(process.env.MONGO_URI)
   if (method === 'PATCH') {
     const { title, body, slug, tags, hook, author } = req.body
     const note = await saveNote({ id, title, body, slug, tags, hook, author })
