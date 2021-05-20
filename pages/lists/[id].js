@@ -14,7 +14,7 @@ export default () => {
   const user = useUser({ redirectTo: `/login?next=/lists/${id}` })
   const author = user?.email
   const { data: notes } = searchNotes({ author, _id: id })
-  if (!notes)
+  if (!notes || !user)
     return (
       <Page full>
         <main>
