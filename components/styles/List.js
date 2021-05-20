@@ -28,4 +28,13 @@ export default styled.div`
       }
     }
   }
+  ul.selectItems {
+    li {
+      display: flex;
+      align-items: center;
+      span {
+        flex-grow: 1;
+      }
+    }
+  }
 `

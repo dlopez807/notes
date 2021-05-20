@@ -1,7 +1,15 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
-import { Move, X, Check, Search as SearchIcon } from 'react-feather'
+import {
+  Move,
+  X,
+  Check,
+  Search as SearchIcon,
+  CheckSquare,
+  ChevronsUp,
+  ChevronsDown,
+} from 'react-feather'
 import { toast } from 'react-toastify'
 
 import Search from './Search'
@@ -72,12 +80,33 @@ const DND = ({ items, reorderItems, isOrderedList }) => (
   </DragDropContext>
 )
 
+const SelectItems = ({ items, selectedItems, setSelectedItems }) => (
+  <ul className="selectItems">
+    {items.map((item, index) => (
+      <li key={index}>
+        <span>{item}</span>{' '}
+        <input
+          type="checkbox"
+          checked={selectedItems[index]}
+          onChange={() => {
+            const newSelectedItems = [...selectedItems]
+            newSelectedItems[index] = !newSelectedItems[index]
+            setSelectedItems(newSelectedItems)
+          }}
+        />
+      </li>
+    ))}
+  </ul>
+)
+
 export default ({ note: { _id, list, title } }) => {
   const { search, setSearch, results, searchRef } = useSearch({
     list: list || [],
   })
   const [items, setItems] = useState(list)
   const [editListOrder, setEditListOrder] = useState(false)
+  const [selectItems, setSelectItems] = useState(false)
+  const [selectedItems, setSelectedItems] = useState(items.map(() => false))
   const reorderList = async newItems => {
     if (newItems.length === items.length) {
       setItems(newItems)
@@ -120,6 +149,12 @@ export default ({ note: { _id, list, title } }) => {
               items={items}
               reorderItems={reorderList}
             />
+          ) : selectItems ? (
+            <SelectItems
+              items={items}
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
+            />
           ) : isOrderedList ? (
             <ol>
               {items.map(removeNumbers).map((item, index) => (
@@ -154,17 +189,88 @@ export default ({ note: { _id, list, title } }) => {
               </a>
             </Link>
           </li>
-          <li>
-            <button
-              type="button"
-              disabled={search !== ''}
-              onClick={() => {
-                setEditListOrder(!editListOrder)
-              }}
-            >
-              {editListOrder ? <Check /> : <Move />}
-            </button>
-          </li>
+          {!editListOrder && (
+            <>
+              {selectItems && (
+                <>
+                  <li>
+                    <button
+                      type="button"
+                      disabled={
+                        search !== '' ||
+                        selectedItems.filter(i => i).length === 0
+                      }
+                      onClick={async () => {
+                        const newItems = [
+                          ...items.filter((item, idx) => selectedItems[idx]),
+                          ...items.filter((item, idx) => !selectedItems[idx]),
+                        ]
+                        setItems(newItems)
+                        setSelectedItems(items.map(() => false))
+                        const newBody = `\n${newItems.join('\n')}`
+                        await updateNote({
+                          _id,
+                          body: newBody,
+                        })
+                        toast.success('list updated')
+                      }}
+                    >
+                      <ChevronsUp />
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      disabled={
+                        search !== '' ||
+                        selectedItems.filter(i => i).length === 0
+                      }
+                      onClick={async () => {
+                        const newItems = [
+                          ...items.filter((item, idx) => !selectedItems[idx]),
+                          ...items.filter((item, idx) => selectedItems[idx]),
+                        ]
+                        setItems(newItems)
+                        setSelectedItems(items.map(() => false))
+                        const newBody = `\n${newItems.join('\n')}`
+                        await updateNote({
+                          _id,
+                          body: newBody,
+                        })
+                        toast.success('list updated')
+                      }}
+                    >
+                      <ChevronsDown />
+                    </button>
+                  </li>
+                </>
+              )}
+              <li>
+                <button
+                  type="button"
+                  disabled={search !== ''}
+                  onClick={() => {
+                    setSelectItems(!selectItems)
+                  }}
+                >
+                  {selectItems ? <Check /> : <CheckSquare />}
+                </button>
+              </li>
+            </>
+          )}
+          {!selectItems && (
+            <li>
+              <button
+                type="button"
+                disabled={search !== ''}
+                onClick={() => {
+                  setEditListOrder(!editListOrder)
+                }}
+              >
+                {editListOrder ? <Check /> : <Move />}
+              </button>
+            </li>
+          )}
         </ul>
       </Footer>
     </>
